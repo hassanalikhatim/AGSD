@@ -4,7 +4,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 
 from p1_hasnets.scripts.train_federated import main as main_federated
-from p1_hasnets.scripts.train_federated_mp import main as main_federated_mp
+from p1_hasnets.scripts.train_federated_multi import main as main_federated_mp
 
 
 

@@ -90,7 +90,7 @@ def shot(server_name):
         my_clients_distribution={'simple_(poison-0.25)_(scale-2)': 45, 'clean': 55},
         versioning=False
     )
-    experiment_conducted = helper.prepare_paths_and_names(
+    helper.prepare_paths_and_names(
         'p1_hasnets/motivational_analysis/results/', 'p1_hasnets/motivational_analysis/csv_file/', 
         model_name_prefix='federated', filename='accuracies_and_losses_test_2.csv'
     )
@@ -103,8 +103,7 @@ def shot(server_name):
     )
     
     poisoned_data = Simple_Backdoor(my_data, backdoor_configuration={'poison_ratio': 0.1})
-    poisoned_test_loader = torch.utils.data.DataLoader(poisoned_data.poisoned_test, batch_size=512)
-
+    
     for epoch in range(my_model.model_configuration['epochs']):
         show_str = ''
         
@@ -126,7 +125,8 @@ def shot(server_name):
 
 def main():
     
-    for server_name in ['simple', 'flame', 'mesas', 'hasnet_h']:
+    # for server_name in ['simple', 'flame', 'mesas', 'hasnet_h']:
+    for server_name in ['hasnet_h']:
         shot(server_name)
         
     return

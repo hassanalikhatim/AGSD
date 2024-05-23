@@ -61,7 +61,8 @@ def compile_results_shot(
             for each_key in helper.dictionary_to_save.keys():
                 helper.dictionary_to_save[each_key].append(helper.dictionary_to_save[each_key][-1])
                 
-        helper.save_dataframe()
+        print()
+        helper.save_dataframe(force_overwrite=True)
         print('dataframe saved at:', helper.csv_path_and_filename)
     
     return helper.experiment_conducted
@@ -69,62 +70,73 @@ def compile_results_shot(
 
 def main(orientation=0):
     
-    # setting the orientation of the experiment
     if orientation == 1:
-        _dataset_names = dataset_names[::-1]
-        _clients_distributions = clients_distributions[::-1]
-        _server_types = server_types[::-1]
+        _experimental_setups = experimental_setups[::-1]
     else:
-        _dataset_names = dataset_names
-        _clients_distributions = clients_distributions
-        _server_types = server_types
+        _experimental_setups = experimental_setups
     
     # starts here
-    total_experiments = len(dataset_names) * len(clients_distributions) * len(server_types)
-    current_experiment_number = 0
-    not_conducted_experiments = 0
-    
-    # iterating over data
-    for dataset_name in _dataset_names:
+    for experimental_setup in _experimental_setups:
+        dataset_names = experimental_setup.dataset_names
+        clients_distributions = experimental_setup.clients_distributions
+        server_types = experimental_setup.server_types
         
-        # iterating over clients distibutions
-        for clients_distribution in _clients_distributions:
+        # setting the orientation of the experiment
+        if orientation == 1:
+            _dataset_names = dataset_names[::-1]
+            _clients_distributions = clients_distributions[::-1]
+            _server_types = server_types[::-1]
+        else:
+            _dataset_names = dataset_names
+            _clients_distributions = clients_distributions
+            _server_types = server_types
+        
+        # one experimental setup starts here
+        total_experiments = len(dataset_names) * len(clients_distributions) * len(server_types)
+        current_experiment_number = 0
+        not_conducted_experiments = 0
+        
+        # iterating over data
+        for dataset_name in _dataset_names:
             
-            # iterating over server configurations
-            for server_type in _server_types:
+            # iterating over clients distibutions
+            for clients_distribution in _clients_distributions:
                 
-                my_model_configuration = model_configurations[dataset_name].copy()
-                my_model_configuration['dataset_name'] = dataset_name
-                
-                my_server_configuration = server_configurations[different_servers_configured[server_type]['type']].copy()
-                for key in different_servers_configured[server_type].keys():
-                    my_server_configuration[key] = different_servers_configured[server_type][key]
-                my_server_configuration['type'] = different_servers_configured[server_type]['type']
-                
-                num_clients = my_server_configuration['num_clients']
-                my_clients_distribution = clients_distribution.copy()
-                for key in my_clients_distribution.keys():
-                    my_clients_distribution[key] = int(my_clients_distribution[key] * num_clients)
-                my_clients_distribution['clean'] = num_clients - np.sum(
-                    np.array( [my_clients_distribution[key] for key in my_clients_distribution.keys()] )
-                )
-                
-                print('\n\n{} NEW COMPILATION {}'.format( '*' * 30, '*' * 30 ))
-                print('Compilation # {}/{}.'.format(current_experiment_number+1, total_experiments))
-                print('Number of non-conducted experiments:', not_conducted_experiments)
-                print('Model configuration:', my_model_configuration)
-                print('Server configuration:', my_server_configuration)
-                print('Clients configuration:', my_clients_distribution)
-                print('\n')
-                
-                experiment_conducted = compile_results_shot(
-                    my_model_configuration,
-                    my_server_configuration,
-                    my_clients_distribution
-                )
-                
-                current_experiment_number += 1
-                if not experiment_conducted:
-                    not_conducted_experiments += 1
+                # iterating over server configurations
+                for server_type in _server_types:
+                    
+                    my_model_configuration = model_configurations[dataset_name].copy()
+                    my_model_configuration['dataset_name'] = dataset_name
+                    
+                    my_server_configuration = server_configurations[different_servers_configured[server_type]['type']].copy()
+                    for key in different_servers_configured[server_type].keys():
+                        my_server_configuration[key] = different_servers_configured[server_type][key]
+                    my_server_configuration['type'] = different_servers_configured[server_type]['type']
+                    
+                    num_clients = my_server_configuration['num_clients']
+                    my_clients_distribution = clients_distribution.copy()
+                    for key in my_clients_distribution.keys():
+                        my_clients_distribution[key] = int(my_clients_distribution[key] * num_clients)
+                    my_clients_distribution['clean'] = num_clients - np.sum(
+                        np.array( [my_clients_distribution[key] for key in my_clients_distribution.keys()] )
+                    )
+                    
+                    print('\n\n{} NEW COMPILATION {}'.format( '*' * 30, '*' * 30 ))
+                    print('Compilation # {}/{}.'.format(current_experiment_number+1, total_experiments))
+                    print('Number of non-conducted experiments:', not_conducted_experiments)
+                    print('Model configuration:', my_model_configuration)
+                    print('Server configuration:', my_server_configuration)
+                    print('Clients configuration:', my_clients_distribution)
+                    print('\n')
+                    
+                    experiment_conducted = compile_results_shot(
+                        my_model_configuration,
+                        my_server_configuration,
+                        my_clients_distribution
+                    )
+                    
+                    current_experiment_number += 1
+                    if not experiment_conducted:
+                        not_conducted_experiments += 1
     
     return

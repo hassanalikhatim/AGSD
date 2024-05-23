@@ -32,6 +32,6 @@ class i_FGSM(Adversarial_Attack):
                 epsilon=epsilon_per_iteration,
                 targeted=targeted
             )
-            x_perturbation = np.clip(x_input+x_perturbation, 0., 1.) - x_input
+            x_perturbation = np.clip(x_input+x_perturbation, np.min(x_input), np.max(x_input)) - x_input
             
-        return np.clip(x_input + x_perturbation, 0., 1.)
+        return np.clip(x_input + x_perturbation, np.min(x_input), np.max(x_input))

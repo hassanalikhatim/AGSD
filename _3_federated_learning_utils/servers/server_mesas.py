@@ -30,7 +30,8 @@ class Server_Mesas(Server):
         data: Torch_Dataset,
         model: Torch_Model,
         clients_with_keys: dict={},
-        configuration=None
+        configuration=None,
+        **kwargs
     ):
         
         super().__init__(
@@ -67,6 +68,9 @@ class Server_Mesas(Server):
         else:
             self.selected_states = []
             return self.model.model.state_dict()
+        
+        self.good_indicator = -1. * np.ones((len(self.active_clients)))
+        self.good_indicator[self.selected_states] = 1.
         
         return super().aggregate([clients_state_dict[c] for c in self.selected_states])
     
@@ -164,7 +168,7 @@ class Server_Mesas(Server):
         return mesas_values.detach().cpu().numpy()
     
     
-    def evaluate_server_statistics(self):
+    def _evaluate_server_statistics(self):
         
         dict_1 = super().evaluate_server_statistics()
         

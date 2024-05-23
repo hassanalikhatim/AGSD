@@ -40,22 +40,21 @@ class Irreversible_Backdoor(Simple_Backdoor):
         self.poison_ratio = self.backdoor_configuration['poison_ratio']
         
         self.reset_trigger()
-        self.target = self.backdoor_configuration['target']
+        self.targets = [self.backdoor_configuration['target']]
         
         self.visible_trigger = torch.zeros_like(self.train.__getitem__(0)[0])
         self.visible_trigger[0, :5, :5] = 1.
+        self.visible_triggers = [self.visible_trigger]
         
         return
     
     
     def reset_trigger(self):
-        self.trigger = torch.zeros_like(self.train.__getitem__(0)[0])
+        self.triggers = [torch.zeros_like(self.train.__getitem__(0)[0])]
         return
     
     
-    def compute_optimal_trigger(
-        self, local_model: Torch_Model
-    ):
+    def compute_optimal_trigger(self, local_model: Torch_Model):
         
         x_input, random_indices = [], np.random.choice(self.train.__len__(), size=512)
         for k in random_indices:
@@ -69,7 +68,7 @@ class Irreversible_Backdoor(Simple_Backdoor):
             iterations=self.backdoor_configuration['trigger_inversion_iterations'],
             verbose=False
         )
-        self.trigger = torch.clamp( torch.tensor(np_trigger[0])+self.visible_trigger, 0., 1.)
+        self.triggers = [torch.clamp( torch.tensor(np_trigger[0])+self.visible_trigger, np.min(x_input), np.max(x_input))]
         
         return
     

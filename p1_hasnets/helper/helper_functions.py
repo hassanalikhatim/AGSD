@@ -9,13 +9,10 @@ from _1_adversarial_ML.backdoor_attacks.simple_backdoor import Simple_Backdoor
 from _3_federated_learning_utils.clients.all_clients import *
 from _3_federated_learning_utils.servers.all_servers import *
 
+from ..adaptive_backdoor_attacks.adversarial_training_client import Adversarial_Training_Backdoor_Client
+from ..adaptive_backdoor_attacks.adversarial_optimization_client import Adversarial_Optimization_Backdoor_Client
+
 from _3_federated_learning_utils.splits import Splits
-
-from ..hasnet_servers.server_hasnet_from_heldout import Server_HaSNet_from_HeldOut
-from ..hasnet_servers.server_hasnet_from_noise import Server_HaSNet_from_Noise
-from ..hasnet_servers.server_hasnet_from_ood import Sever_HaSNet_from_OOD
-
-from ..helper.helper import Helper_Hasnets
 
 
 
@@ -26,6 +23,14 @@ my_datasets = {
     'gtsrb': GTSRB,
     'cifar10_non_sota': CIFAR10,
     'gtsrb_non_sota': GTSRB,
+    'cifar10_non_sota_standard_non_iid': CIFAR10,
+    'cifar10_non_sota_mesas_non_iid': CIFAR10,
+    'gtsrb_non_sota_standard_non_iid_01': GTSRB,
+    'gtsrb_non_sota_standard_non_iid_03': GTSRB,
+    'gtsrb_non_sota_standard_non_iid_05': GTSRB,
+    'gtsrb_non_sota_standard_non_iid_07': GTSRB,
+    'gtsrb_non_sota_standard_non_iid_09': GTSRB,
+    'gtsrb_non_sota_mesas_non_iid': GTSRB,
 }
 
 implemented_clients = {
@@ -34,7 +39,12 @@ implemented_clients = {
     'invisible_backdoor': Invisible_Backdoor_Client,
     'neurotoxin_backdoor': Neurotoxin_Client,
     'iba_backdoor': Irreversible_Backdoor_Client,
+    'multiple_target_backdoor': Multiple_Target_Backdoor_Client,
     'visible_backdoor_initially_good': Visible_Backdoor_Initially_Clean,
+    'class_specific_backdoor': Class_Specific_Backdoor_Client,
+    'low_confidence_backdoor': Low_Confidence_Backdoor_Client,
+    'adv_training_backdoor': Adversarial_Training_Backdoor_Client,
+    'adv_optimization_backdoor': Adversarial_Optimization_Backdoor_Client
 }
 
 # implemented_servers = {
@@ -61,10 +71,10 @@ def prepare_clean_and_poisoned_data(my_model_configuration: dict) -> list[Torch_
     return my_data, poisoned_data
 
 
-def prepare_data_splits(my_data, num_clients):
+def prepare_data_splits(my_data, num_clients, split_type: str='iid', alpha: float=0):
     
-    splits = Splits(my_data, split_type='iid', num_clients=num_clients)
-    splits.iid_split()
+    splits = Splits(my_data, split_type=split_type, num_clients=num_clients, alpha=alpha)
+    splits.split()
     
     return splits
 
@@ -94,7 +104,7 @@ def perpare_all_clients_with_keys(
             
             clients_with_keys[_key].append(
                 implemented_clients[key](
-                    Client_Torch_SubDataset(my_data, idxs=splits.all_client_indices[index]), 
+                    Client_Torch_SubDataset(my_data, idxs=splits.all_client_indices[index]),
                     global_model.model_configuration,
                     client_configuration=this_client_configuration
                 )

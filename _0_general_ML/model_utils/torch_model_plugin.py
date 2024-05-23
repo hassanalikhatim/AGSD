@@ -81,9 +81,7 @@ class Torch_Model_Plugin:
         
         self.model = model_architectures[self.model_configuration['model_architecture']]()
         
-        self.device = torch.device(
-            'cuda:'+str(self.model_configuration['gpu_number']) if torch.cuda.is_available() else 'cpu'
-        )
+        self.device = torch.device('cuda:'+str(self.model_configuration['gpu_number']) if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)
         
         self.optimizer_class = Torch_Optimizer(
@@ -105,6 +103,9 @@ class Torch_Model_Plugin:
         confirm_directory(self.save_directory)
         self.save_weights(self.save_directory+name, save_optimizer=save_optimizer)
         return
+    
+    
+    def unsave(self, name, **kwargs): return self.unsave_weights(self.save_directory+name)
     
     
     def _deprecated_save(self, name, save_optimizer):

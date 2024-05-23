@@ -1,5 +1,6 @@
 import torch
 from termcolor import colored
+import gc
 
 
 # from ..config import *
@@ -19,12 +20,19 @@ def federated_shot(
     my_clients_distribution: dict
 ):
     
+    if 'split_type' not in my_model_configuration.keys():
+        my_model_configuration['split_type'] = 'iid'
+    if 'alpha' not in my_model_configuration.keys():
+        my_model_configuration['alpha'] = 0.
+    
     # *** preparing some results-related variables ***
     results_path = configuration_variables['results_path']
     versioning = configuration_variables['versioning']
     different_clients_configured = configuration_variables['different_clients_configured']
     client_configurations = configuration_variables['client_configurations']
     reconduct_conducted_experiments = configuration_variables['reconduct_conducted_experiments']
+    count_continued_as_conducted = configuration_variables['count_continued_as_conducted']
+    save_continued = configuration_variables['save_continued']
     csv_file_path = results_path + my_model_configuration['dataset_name'] + '/csv_file/'
     
     helper = Helper_Hasnets(
@@ -40,15 +48,15 @@ def federated_shot(
     print('\nNumber of clean clients: ', my_clients_distribution['clean'])
     
     my_data, poisoned_data = prepare_clean_and_poisoned_data(my_model_configuration)
-    splits = prepare_data_splits(my_data, num_clients)
-    helper.check_conducted(data_name=my_data.data_name)
+    splits = prepare_data_splits(my_data, num_clients, split_type=my_model_configuration['split_type'], alpha=my_model_configuration['alpha'])
+    helper.check_conducted(data_name=my_data.data_name, count_continued_as_conducted=count_continued_as_conducted)
     
     if helper.experiment_conducted and (not reconduct_conducted_experiments):
         print('Experiment already conducted. Variable {reconduct_conducted_experiments} is set to False. Moving on to the next experiment.')
     
     else:
         global_model = Torch_Model(my_data, my_model_configuration, path=helper.save_path)
-        # global_model.load_weights(global_model.save_directory + helper.model_name)
+        if save_continued: global_model.save(helper.model_name_cont)
         
         clients_with_keys = perpare_all_clients_with_keys(my_data, global_model, splits, my_clients_distribution, different_clients_configured, client_configurations)
     
@@ -62,8 +70,11 @@ def federated_shot(
             server_stats = helper.evaluate_server_statistics(epoch, server)
             show_str, color = helper.get_display_string(server_stats)
             
-            print_str = '\r({}-{:5d}) | Round {:3d}: {}'.format(my_server_configuration['type'][:10], my_server_configuration['healing_set_size'], epoch, show_str)
+            print_str = f'\r({my_data.data_name[:3]}-{(my_server_configuration['type']+' '*10)[:10]}-{f'{my_server_configuration['healing_set_size'] if 'healing_set_size' in my_server_configuration.keys() else ''}{' '*5}'[:5]}) | Round {epoch:3d}: {show_str}'
+            print_str += f' {server.a_msg_that_i_need_to_print}'
             print(colored(print_str, color))
+            
+            gc.collect()
         
         # restore the best test model
         global_model.model.load_state_dict(server.key_unflatten_client_state_np(server.saved_flattened_model))
@@ -74,7 +85,10 @@ def federated_shot(
         global_model.save(helper.model_name)
         print('saved model at:', global_model.save_directory + helper.model_name)
         
-        helper.save_dataframe()
+        global_model.unsave(helper.model_name_cont)
+        print('Unsaved model at:', global_model.save_directory + helper.model_name_cont)
+        
+        helper.save_dataframe(force_overwrite=True)
         print('dataframe saved at:', helper.csv_path_and_filename)
     
     return

@@ -18,7 +18,8 @@ class Server(Server_Client_Plugin):
         model: Torch_Model,
         clients_with_keys: dict={}, 
         configuration: dict={},
-        verbose: bool=True
+        verbose: bool=True,
+        **kwargs
     ):
         
         super().__init__(clients_with_keys)
@@ -39,10 +40,11 @@ class Server(Server_Client_Plugin):
         
         self.clients_ratio = self.configuration['clients_ratio']
         
+        self.good_indicator = np.ones(( int(self.clients_ratio*len(self.clients)) ))
         self.best_test_acc = 0.; self.still_patient = True
         self.saved_flattened_model = None
         
-        self.verbose = verbose; self.show_msg = ''
+        self.verbose = verbose; self.show_msg = ''; self.a_msg_that_i_need_to_print = ''
         
         return
     
@@ -91,7 +93,11 @@ class Server(Server_Client_Plugin):
                 
             assert len(clients_state_dict) == len(self.active_clients)
             
-            aggregated_weights = self.aggregate(clients_state_dict, pre_str=pre_str)
+            try: 
+                aggregated_weights = self.aggregate(clients_state_dict, pre_str=pre_str)
+            except Exception as e: 
+                print(f'\n\nThis should not happen often. The exception is {e}')
+                aggregated_weights = self.model.model.state_dict()
             self.model.model.load_state_dict(aggregated_weights)
             
             self.update_patience()
@@ -154,11 +160,20 @@ class Server(Server_Client_Plugin):
     
     def evaluate_server_statistics(self):
         
+        signs = {key: [0] for key in self.client_with_keys.keys()}
+        for i, ac in enumerate(self.active_clients):
+            signs[self.clients_keys[ac]].append(np.mean(self.good_indicator[i] > 0))
+            
+        for key in signs.keys():
+            if len(signs[key]) > 1:
+                signs[key] = signs[key][1:]
+        
         return {
             'train_loss': self.train_loss, 
             'train_acc': self.train_acc, 
             'test_loss': self.test_loss, 
-            'test_acc': self.test_acc
+            'test_acc': self.test_acc,
+             **{key+'_acc_ratio': np.mean(signs[key]) for key in signs.keys()}
         }
         
         

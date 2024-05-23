@@ -46,13 +46,21 @@ class Torch_Model(Torch_Model_Plugin):
         return
         
         
-    def save_weights(
-        self, name, save_optimizer=True
-    ):
+    def save_weights(self, name, save_optimizer=True):
         
         torch.save(self.model.state_dict(), name+'.pth')
         if save_optimizer:
             torch.save(self.optimizer.state_dict(), name+'_optimizer.pth')
+        
+        return
+    
+    
+    def unsave_weights(self, name, **kwargs):
+        
+        if os.path.isfile(name+'.pth'):
+            os.remove(f'{name}.pth')
+        if os.path.isfile(name+'_optimizer.pth'):
+            os.remove(name+'_optimizer.pth')
         
         return
     

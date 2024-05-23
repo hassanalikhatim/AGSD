@@ -48,4 +48,3 @@ class Motivational_Server_Flame(Server_Flame):
         return
     
     
-    

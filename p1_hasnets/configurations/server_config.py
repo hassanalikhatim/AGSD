@@ -200,6 +200,20 @@ different_servers_configured = {
     'hasnet_hidden_values_server': {'type': 'hasnet_hidden_values'},
     'hasnet_hidden_values_server_simple_backdoor': {'type': 'hasnet_hidden_values', 'suffix_phrase': 'backdoor'},
     'hasnet_hidden_values_server_visbile_backdoor_initially_good': {'type': 'hasnet_hidden_values', 'suffix_phrase': 'visible_backdoor_initially_good'},
-    'hgsd_id_initially_undefended': {'type': 'hgsd_id_initially_undefended'},
     'hgsd_id_for_changing_clients': {'type': 'hgsd_id_for_changing_clients', 'suffix_phrase': 'visible_backdoor_initially_good', 'bad_clients_remain_good_epoch': 30},
+    
+    # more than two clusters
+    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 3},
+    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 3},
+    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
+    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
+    
+    
+    # initially undefended hgsd
+    'hgsd_id_initially_undefended_10': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 10},
+    'hgsd_id_initially_undefended_20': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 20},
+    'hgsd_id_initially_undefended_30': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 30},
+    'hgsd_id_initially_undefended_40': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 40},
+    'hgsd_id_initially_undefended_50': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 50},
+    
 }

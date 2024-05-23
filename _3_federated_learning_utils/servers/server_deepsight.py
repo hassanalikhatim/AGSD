@@ -18,7 +18,8 @@ class Server_Deepsight(Server):
         data: Torch_Dataset,
         model: Torch_Model,
         clients_with_keys: dict={},
-        configuration=None
+        configuration=None,
+        **kwargs
     ):
         
         super().__init__(
@@ -150,5 +151,8 @@ class Server_Deepsight(Server):
                     w_avg[key] += clients_state_dict[i][key]
             
             w_avg[key] = torch.div(w_avg[key], len(chosen_ids))
+            
+        self.good_indicator = -1. * np.ones((len(self.active_clients)))
+        self.good_indicator[chosen_ids] = 1.
         
         return w_avg

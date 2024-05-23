@@ -30,6 +30,7 @@ class Torch_Dataset:
     def get_output_shape(self): return tuple([len(self.get_class_names())])
     def get_input_shape(self): return self.train.__getitem__(0)[0].shape
     def get_class_names(self):  return np.arange(len(np.unique( [self.train[i][1] for i in range(self.train.__len__())] )))
+    def get_num_classes(self): return 1+np.max([self.train[i][1] for i in range(self.train.__len__())])
     
     
     def prepare_data_loaders(self, batch_size=64):

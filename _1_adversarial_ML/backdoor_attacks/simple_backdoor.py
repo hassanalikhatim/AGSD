@@ -43,13 +43,14 @@ class Simple_Backdoor(Torch_Dataset):
         self.poison_ratio = self.backdoor_configuration['poison_ratio']
         
         if self.backdoor_configuration['trigger'] is None:
-            self.trigger = torch.zeros_like(self.train.__getitem__(0)[0])
-            self.trigger[0, :5, :5] = 1.
+            trigger = torch.zeros_like(self.train.__getitem__(0)[0])
+            trigger[0, :5, :5] = 1.
         else:
-            self.trigger = self.backdoor_configuration['trigger']
+            trigger = self.backdoor_configuration['trigger']
         
         # The target class for poisoning
-        self.target = self.backdoor_configuration['target']
+        self.targets = [self.backdoor_configuration['target']]
+        self.triggers = [trigger]
         
         return
     
@@ -72,7 +73,7 @@ class Simple_Backdoor(Torch_Dataset):
         return
     
     
-    def poison(self, x, y):
-        return torch.clamp(x+self.trigger, 0., 1.), self.target
+    def poison(self, x, y, **kwargs):
+        return torch.clamp(x+self.triggers[0], 0., 1.), self.targets[0]
     
     

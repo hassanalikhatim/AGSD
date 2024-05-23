@@ -2,11 +2,13 @@ import os
 import numpy as np
 import pandas as pd
 import copy
+from termcolor import colored
 
 
 from utils_.general_utils import confirm_directory
 
 from _0_general_ML.data_utils.torch_dataset import Torch_Dataset
+from _0_general_ML.model_utils.torch_model import Torch_Model
 
 from _3_federated_learning_utils.servers.server import Server
 from _3_federated_learning_utils.clients.client import Client
@@ -40,8 +42,8 @@ class Helper_Hasnets:
         return
     
     
-    def print_out(self, *statement, end='\n'):
-        if self.verbose:
+    def print_out(self, *statement, end='\n', local_verbose: bool=False):
+        if self.verbose or local_verbose:
             print(*statement, end=end)
         return
     
@@ -63,11 +65,13 @@ class Helper_Hasnets:
         
         self.model_name = model_name_prefix
         for key in self.my_model_configuration.keys():
-            if key == 'gpu_number':
-                self.model_name += '_(gpu_number-0)'
-            else:
-                self.model_name += '_({}-{})'.format(key, self.my_model_configuration[key])
-                
+            if key == 'gpu_number': self.model_name += '_(gpu_number-0)'
+            elif key == 'split_type' and self.my_model_configuration[key] == 'iid': pass
+            elif key == 'alpha' and self.my_model_configuration[key] == 0: pass
+            else: self.model_name += '_({}-{})'.format(key, self.my_model_configuration[key])
+            
+        self.model_name_cont = self.model_name + '_continued'
+            
         return
     
     
@@ -109,21 +113,23 @@ class Helper_Hasnets:
         return
         
         
-    def check_conducted(self, data_name: str=''):
+    def check_conducted(self, data_name: str='', count_continued_as_conducted: bool=True, local_verbose: bool=False):
         
         if data_name == '':
             data_name = self.my_model_configuration['dataset_name']
         
         # check if experiment has already been conduction
         self.experiment_conducted = False
-        save_model_path = '{}{}/torch_models/{}.pth'.format(
-            self.save_path, data_name, self.model_name
-        )
+        save_model_path = f'{self.save_path}{data_name}/torch_models/{self.model_name}.pth'
+        save_model_path_cont = f'{self.save_path}{data_name}/torch_models/{self.model_name_cont}.pth'
         if os.path.isfile(save_model_path):
-            self.print_out('Hurray...! Model file found at: {}'.format(save_model_path))
+            self.print_out(f'{'#'*50}\nHurray...! Model file found at: {save_model_path}\n{'#'*50}', local_verbose=local_verbose)
+            self.experiment_conducted = True
+        elif count_continued_as_conducted and os.path.isfile(save_model_path_cont):
+            self.print_out(f'{'#'*50}\nDidn\'t find model file, but found continued model file found at: {save_model_path}\n{'#'*50}', local_verbose=local_verbose)
             self.experiment_conducted = True
         else:
-            self.print_out('Model file not found at: {}'.format(save_model_path))
+            self.print_out(f'{'#'*50}\nModel file not found at: {save_model_path}.\n{'#'*50}', local_verbose=local_verbose)
             print('WARNING: Experiment has not been conducted.')
             
         return
@@ -162,7 +168,7 @@ class Helper_Hasnets:
                     self.print_out('Overwriting due to force overwrite.')
                 assert len(df) == len(self.dictionary_to_save[key]), f'Length of dataframe is {len(df)}, but the length of array is {len(self.dictionary_to_save[key])}'
                 df[key] = self.dictionary_to_save[key]
-            
+                
         # save the dataframe
         df.to_csv(self.csv_path_and_filename, index=False)
         
@@ -177,6 +183,23 @@ class Helper_Hasnets:
         for column in load_columns:
             if column in df.columns:
                 self.dictionary_to_load[column] = df[column].tolist()
+        
+        return
+        
+        
+    def load_all_columns_in_dictionary_with_this_string(self, string_: str, give_columns_if_no_data: bool=False):
+        
+        # load the df file
+        df = pd.read_csv(self.csv_path_and_filename)
+        found_a_column = False
+        
+        for column in df.columns:
+            if string_ in column:
+                self.dictionary_to_load[column] = df[column].tolist()
+                found_a_column = True
+        
+        if give_columns_if_no_data and (not found_a_column):
+            self.dictionary_to_load = {key: [] for key in df.columns}
         
         return
     
@@ -228,14 +251,15 @@ class Helper_Hasnets:
         for key in server_stats.keys():
             _str = '{:s}-{:s}'.format('{:.3f}'.format(server_stats[key]) if server_stats[key]!=0 else '()', key)[:10]
             _str += ' ' * (10-len(_str)) + ' | '
-            if 'train' in key or 'test' in key: model_str += _str
-            elif 'clean' in key: clean_str += _str
-            elif 'ratio' in key: attack_str += _str; color = 'red' if server_stats[key] != 0 else 'white'
+            if 'train_' in key or 'test_' in key: model_str += _str
+            elif 'clean' in key: clean_str += _str; color = 'light_cyan' if server_stats[key]==0 and color!='light_red' else color
+            elif 'ratio' in key: attack_str += _str; color = 'light_red' if server_stats[key]!=0 else color
             
         for key in self.dictionary_to_save.keys():
             _str = '{:.2f}-P_Acc'.format(self.dictionary_to_save[key][-1])[:10]
             _str += ' ' * (10-len(_str)) + ' | '
-            if '_poisoned_acc' in key: eval_str += _str
+            if '_poisoned_acc' in key: eval_str = eval_str+colored(_str, 'yellow') if self.dictionary_to_save[key][-1]>0.1 else eval_str+_str
+            # if '_poisoned_acc' in key and self.dictionary_to_save[key][-1] > 0.1: color = 'yellow' if color=='white' else color
             
         return f'{model_str}{clean_str}{attack_str}{eval_str}', color
     

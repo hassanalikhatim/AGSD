@@ -20,21 +20,14 @@ class Trigger_Inversion(Adversarial_Attack):
         return
     
     
-    def attack(
-        self, x_input, y_input,
-        iterations=1000,
-        verbose=True,
-        **kwargs
-    ):
+    def attack(self, x_input, y_input, iterations=1000, verbose=True, **kwargs):
         
         self.last_run_loss_values = []
         
         x_perturbation = np.random.standard_normal( size=[1]+list(x_input.shape[1:]) ).astype(np.float32)
         mask = np.zeros( ([1]+[1]+list(x_input.shape[2:])) ).astype(np.float32)
         for iteration in range(iterations):
-            x_perturbation, mask = self.step(
-                x_input, y_input, x_perturbation, mask
-            )
+            x_perturbation, mask = self.step(x_input, y_input, x_perturbation, mask)
             
             if verbose:
                 print(
@@ -48,10 +41,7 @@ class Trigger_Inversion(Adversarial_Attack):
         return x_perturbation, mask
     
     
-    def step(
-        self, x_input, y_input, 
-        x_perturbation, mask, epsilon=0.05
-    ):
+    def step(self, x_input, y_input, x_perturbation, mask, epsilon=0.05):
         
         def sigmoid(x_in):
             return 1 / ( 1 + torch.exp(-x_in) )
@@ -65,12 +55,7 @@ class Trigger_Inversion(Adversarial_Attack):
         
         sigmoided_mask = sigmoid(x_mask)
         loss = self.adv_loss_outputs(
-            self.model(
-                torch.clamp(
-                    (1-sigmoided_mask)*x_v + sigmoided_mask*torch.clamp(x_delta, 0, 1),
-                    0, 1
-                )
-            ), 
+            self.model(torch.clamp( (1-sigmoided_mask)*x_v + sigmoided_mask*torch.clamp(x_delta, 0, 1), 0, 1 )), 
             y_in
         )
         loss += torch.mean(sigmoided_mask)

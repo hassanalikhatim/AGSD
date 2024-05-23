@@ -4,7 +4,7 @@ import torch
 
 class Poisonable_Data(torch.utils.data.Dataset):
     
-    def __init__(self, data):
+    def __init__(self, data, **kwargs):
         
         self.data = data
         
@@ -19,7 +19,7 @@ class Poisonable_Data(torch.utils.data.Dataset):
         x, y = self.data.__getitem__(index)
         
         if index in self.poison_indices:
-            x, y = self.poisoner_fn(x, y)
+            x, y = self.poisoner_fn(x, y, type_=0)
         
         return x, y
     
@@ -28,7 +28,7 @@ class Poisonable_Data(torch.utils.data.Dataset):
         return self.data.__len__()
     
     
-    def no_poison(self, x, y):
+    def no_poison(self, x, y, **kwargs):
         return x, y
     
     

@@ -34,7 +34,8 @@ class Server_FoolsGold(Server):
         data: Torch_Dataset,
         model: Torch_Model,
         clients_with_keys: dict={},
-        configuration=None
+        configuration=None,
+        **kwargs
     ):
         
         super().__init__(

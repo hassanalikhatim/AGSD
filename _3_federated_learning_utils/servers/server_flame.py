@@ -30,7 +30,8 @@ class Server_Flame(Server):
         data: Torch_Dataset,
         model: Torch_Model,
         clients_with_keys: dict={},
-        configuration=None
+        configuration=None,
+        **kwargs
     ):
         
         super().__init__(
@@ -92,6 +93,9 @@ class Server_Flame(Server):
                 if not ('bias' in key or 'bn' in key):
                     standard_deviation = median_euclidean_distance * self.configuration['lambda'] * torch.std(state_t[key].clone().view(-1), unbiased=False)
                     state_t[key] += torch.normal(0., standard_deviation, size=state_t[key].shape).to(state_t[key].device)
+        
+        self.good_indicator = np.ones((len(self.active_clients)))
+        self.good_indicator[np.where(self.hdb.labels_ == -1)] = -1.
         
         return state_t
     

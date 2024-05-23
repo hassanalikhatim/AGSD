@@ -5,5 +5,8 @@ from .backdoor_attacks.invisible_backdoor_client import Invisible_Backdoor_Clien
 from .backdoor_attacks.neurotoxin_client import Neurotoxin_Client
 from .backdoor_attacks.iba_client import Irreversible_Backdoor_Client
 from .backdoor_attacks.visible_backdoor_initially_clean import Visible_Backdoor_Initially_Clean
+from .backdoor_attacks.class_specific_backdoor_client import Class_Specific_Backdoor_Client
+from .backdoor_attacks.low_confidence_backdoor_client import Low_Confidence_Backdoor_Client
+from .backdoor_attacks.multiple_target_backdoor_client import Multiple_Target_Backdoor_Client
 
 from .backdoor_defenses.flip_client import Flip_Client

@@ -30,7 +30,8 @@ class Server_Krum(Server):
         data: Torch_Dataset,
         model: Torch_Model,
         clients_with_keys: dict={},
-        configuration: dict=None
+        configuration: dict=None,
+        **kwargs
     ):
         
         super().__init__(
@@ -79,6 +80,9 @@ class Server_Krum(Server):
                     w_avg[key] += clients_state_dict[i][key]
             
             w_avg[key] = torch.div(w_avg[key], len(selected_client_indices))
+            
+        self.good_indicator = -1. * np.ones((len(self.active_clients)))
+        self.good_indicator[selected_client_indices] = 1.
         
         return w_avg
     

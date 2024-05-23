@@ -38,15 +38,17 @@ class Neurotoxin_Client(Simple_Backdoor_Client):
             client_configuration=client_configuration
         )
         
+        self.clean_data = data
+        
         self.client_type = 'neurotoxin_backdoor'
         self.last_epoch_weights = None
         
         default_configuration = {
             'mask_ratio': 0.02
         }
-        for key in self.local_model_configuration.keys():
-            default_configuration[key] = self.local_model_configuration[key]
-        self.local_model_configuration = default_configuration
+        for key in default_configuration.keys():
+            if key not in self.local_model_configuration.keys():
+                self.local_model_configuration[key] = default_configuration[key]
         
         return
     
@@ -62,30 +64,31 @@ class Neurotoxin_Client(Simple_Backdoor_Client):
             for key in self.last_epoch_weights.keys():
                 self.differences[key] = global_model_state_dict[key] - self.last_epoch_weights[key]
             
-            flattened_differences = self.flatten_state(self.differences)
-            self.threshold = np.sort( np.abs(flattened_differences) )[
-                int(self.local_model_configuration['mask_ratio']*len(flattened_differences))
-            ]
-            
             # calculate where the difference is smallest - these neurons will likely not be updated 
             # in the future by honest clients.
-            local_model = Torch_Model(
-                data = self.data,
-                model_configuration=self.local_model_configuration
-            )
+            flattened_differences = self.flatten_state(self.differences)
+            self.threshold = np.sort( np.abs(flattened_differences) )[int(self.local_model_configuration['mask_ratio']*len(flattened_differences))]
+            
+            local_model = Torch_Model(data = self.data, model_configuration=self.local_model_configuration)
             local_model.model.load_state_dict(global_model_state_dict)
-            
-            train_loader, test_loader = local_model.data.prepare_data_loaders(
-                batch_size=self.local_model_configuration['batch_size']
-            )
-            
+            train_loader, test_loader = local_model.data.prepare_data_loaders(batch_size=self.local_model_configuration['batch_size'])
             for epoch in range(1, self.local_model_configuration['local_epochs']+1):
                 train_loss, train_acc = self.train_shot(local_model, train_loader, epoch, verbose=verbose)
-
-            return_state_dict = copy.deepcopy(local_model.model.state_dict())
-            del local_model
             
-            return return_state_dict
+            # poisoned_state_dict = copy.deepcopy(local_model.model.state_dict())
+            # local_model.data = self.clean_data
+            # local_model.model.load_state_dict(global_model_state_dict)
+            # local_model.train(
+            #     epochs=self.local_model_configuration['local_epochs'], 
+            #     batch_size=self.local_model_configuration['batch_size'],
+            #     verbose=verbose
+            # )
+            # clean_state_dict = local_model.model.state_dict()
+            # final_state = {key: poisoned_state_dict[key] for key in poisoned_state_dict.keys()}
+            
+            self.last_epoch_weights = copy.deepcopy(global_model_state_dict)
+            
+            return local_model.model.state_dict()
     
     
     def train_shot(
@@ -111,7 +114,7 @@ class Neurotoxin_Client(Simple_Backdoor_Client):
             
             updated_weights = local_model.model.state_dict()
             for key in updated_weights.keys():
-                updated_weights[key] = torch.where(self.differences[key]<self.threshold, updated_weights[key], 0.)
+                updated_weights[key] = torch.where(self.differences[key]<self.threshold, updated_weights[key], self.differences[key]+self.last_epoch_weights[key])
             local_model.model.load_state_dict(updated_weights)
             
             loss_over_data += loss.data

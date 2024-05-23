@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from _0_general_ML.data_utils.torch_dataset import Torch_Dataset
 from _0_general_ML.model_utils.torch_model import Torch_Model
 
-from .server_hasnet_from_heldout import Server_HaSNet_from_HeldOut
+from ._visible_hgsd_heldout import Server_HaSNet_from_HeldOut
 
 
 

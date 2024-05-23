@@ -9,7 +9,7 @@ from _0_general_ML.model_utils.torch_model import Torch_Model
 
 from _1_adversarial_ML.adversarial_attacks.pgd import PGD
 
-from .server_hasnet_from_heldout import Server_HaSNet_from_HeldOut
+from ._visible_hgsd_heldout import Server_HaSNet_from_HeldOut
 
 
 
@@ -29,6 +29,7 @@ class Sever_HaSNet_from_OOD(Server_HaSNet_from_HeldOut):
         super().__init__(data, model, clients_with_keys, configuration)
         
         self.prepare_healing_data()
+        self.server_name = f'hgsd_(ood-{{{self.real_healing_data.train.__len__()}}})'
         
         return
     
@@ -41,9 +42,9 @@ class Sever_HaSNet_from_OOD(Server_HaSNet_from_HeldOut):
         
         channeled_samples, labels = self.get_samples()
         
-        self.healing_data = Torch_Dataset(data_name=self.data.data_name)
-        self.healing_data.train = torch.utils.data.TensorDataset(torch.tensor(channeled_samples), torch.tensor(labels))
-        self.healing_data.test = self.data.test
+        self.real_healing_data = Torch_Dataset(data_name=self.data.data_name)
+        self.real_healing_data.train = torch.utils.data.TensorDataset(torch.tensor(channeled_samples), torch.tensor(labels))
+        self.real_healing_data.test = self.data.test
         
         return
     

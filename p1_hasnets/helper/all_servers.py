@@ -4,8 +4,8 @@ from _0_general_ML.model_utils.torch_model import Torch_Model
 from _3_federated_learning_utils.servers.server import Server
 from _3_federated_learning_utils.servers.all_servers import *
 
-from ..hasnet_servers.server_hasnet_from_heldout import Server_HaSNet_from_HeldOut
-from ..hasnet_servers.server_hasnet_from_noise import Server_HaSNet_from_Noise
+from ..hasnet_servers._visible_hgsd_heldout import Server_HaSNet_from_HeldOut
+from ..hasnet_servers.__deprecated__.v5.server_hasnet_from_noise import Server_HaSNet_from_Noise
 from ..hasnet_servers.server_hasnet_from_ood import Sever_HaSNet_from_OOD
 from ..hasnet_servers.server_hasnet_from_ood_random_labelling import Sever_HaSNet_from_OOD_Random_Labelling
 from ..hasnet_servers.hidden_values_hgsd_id import Hidden_Values_HGSD_ID

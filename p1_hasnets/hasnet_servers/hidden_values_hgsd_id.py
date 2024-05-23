@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from _0_general_ML.data_utils.torch_dataset import Torch_Dataset
 from _0_general_ML.model_utils.torch_model import Torch_Model
 
-from .server_hasnet_from_heldout import Server_HaSNet_from_HeldOut
+from ._visible_hgsd_heldout import Server_HaSNet_from_HeldOut
 
 
 
@@ -52,7 +52,7 @@ class Hidden_Values_HGSD_ID(Server_HaSNet_from_HeldOut):
             self.print_out(pre_str + this_str, overwrite=True)
             
             clients_state_dict.append(
-                self.clients[idx].weight_updates(self.model.model.state_dict(), be_good=self.be_good, verbose=False)
+                self.clients[idx].weight_updates(self.model.model.state_dict(), be_good=False, verbose=False)
             )
         
         return clients_state_dict
@@ -68,12 +68,12 @@ class Hidden_Values_HGSD_ID(Server_HaSNet_from_HeldOut):
         self.clients_trust_state_history.append(np.array(self.clients_benign_probabilities))
         
         gammas = np.array(self.clients_gamma_history[-1]).copy()
-        gammas[self.active_clients] = (gammas[self.active_clients]*self.ye_wala_epoch + self.gamma[:,0]) / (self.ye_wala_epoch+1)
+        gammas[self.active_clients] = (gammas[self.active_clients]*self.ye_wala_epoch + self.gamma) / (self.ye_wala_epoch+1)
         self.clients_gamma_history.append(gammas)
         
         clean_gamma_history = -10. * np.ones((len(self.active_clients)))
         if 'clean' in active_client_keys:
-            this_history = np.array([self.gamma[c,0] for c, ac in enumerate(self.active_clients) if self.clients_keys[ac]=='clean'])
+            this_history = np.array([self.gamma[c] for c, ac in enumerate(self.active_clients) if self.clients_keys[ac]=='clean'])
             clean_gamma_history[:len(this_history)] = this_history
         self.clean_clients_gamma_history.append(clean_gamma_history)
         
@@ -83,12 +83,12 @@ class Hidden_Values_HGSD_ID(Server_HaSNet_from_HeldOut):
                 backdoored_clients_sampled = True
         nonclean_gamma_history = -10. * np.ones((len(self.active_clients)))
         if backdoored_clients_sampled:
-            this_history = np.array([self.gamma[c,0] for c, ac in enumerate(self.active_clients) if self.clients_keys[ac]!='clean'])
+            this_history = np.array([self.gamma[c] for c, ac in enumerate(self.active_clients) if self.clients_keys[ac]!='clean'])
             nonclean_gamma_history[:len(this_history)] = this_history
         self.nonclean_clients_gamma_history.append(nonclean_gamma_history)
             
         client_selected = -2. * np.ones_like(self.clients_selection_ratio[-1])
-        client_selected[self.active_clients] = self.hasnet_indicator
+        client_selected[self.active_clients] = self.good_indicator
         self.clients_selection_ratio.append(client_selected)
         
         np.savez_compressed(
