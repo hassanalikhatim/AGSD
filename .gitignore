@@ -1,0 +1,5 @@
+__ignore__/
+__pycache__/
+__notebooks__/
+__paper__/
+local_config.py
