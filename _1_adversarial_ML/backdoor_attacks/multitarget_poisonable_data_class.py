@@ -29,7 +29,7 @@ class Multi_Target_Poisonable_Data(torch.utils.data.Dataset):
             self.poison_indices_of_each_class.append(list(shuffled_poison_indices[:len_poison_indices_for_each_target]))
             shuffled_poison_indices = shuffled_poison_indices[len_poison_indices_for_each_target:]
             
-        assert len(len_poison_indices_for_each_target) == self.num_targets, 'Length of [poison_indices_of_each_class] != [num_targets]'
+        assert len(self.poison_indices_of_each_class) == self.num_targets, 'Length of [poison_indices_of_each_class] != [num_targets]'
         
         return
     

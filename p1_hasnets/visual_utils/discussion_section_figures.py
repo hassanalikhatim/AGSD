@@ -114,6 +114,12 @@ def plot_clients_trust_history(load_path: str, save_path: str=None):
         alpha=0.3
     )
 
+    min_ = np.min(clients_trust_state_history)
+    max_ = np.max(clients_trust_state_history)
+    # plt.fill_between(np.arange(80, 88), min_-10, max_+10, color='green', alpha=0.5, linestyles='dashed')
+    plt.vlines([30], min_-10, max_+10, colors='black', linestyles='dashed')
+    
+    plt.ylim([min_, max_])
     plt.ylabel('Trust State History: $\\phi_i$')
     plt.xlabel('Training Round: $t$')
     plt.legend(ncols=2, bbox_to_anchor=(1,1.2), edgecolor='white')
@@ -147,7 +153,7 @@ def plot_clients_gamma_values_over_rounds(load_path: str, save_path: str=None):
         
 
     fig = plt.figure(figsize=(4, 3))
-
+    
     plt.plot(np.mean(processed_clean_clients_gamma_history, axis=1), label='Clean Clients')
     plt.fill_between(
         np.arange(len(processed_clean_clients_gamma_history)), 
@@ -163,7 +169,13 @@ def plot_clients_gamma_values_over_rounds(load_path: str, save_path: str=None):
         np.max(processed_nonclean_clients_gamma_history, axis=1),
         alpha=0.2
     )
-
+    
+    min_ = min(np.min(processed_clean_clients_gamma_history), np.min(processed_nonclean_clients_gamma_history))
+    max_ = max(np.max(processed_clean_clients_gamma_history), np.max(processed_nonclean_clients_gamma_history))
+    # plt.fill_between(np.arange(80, 88), min_-10, max_+10, color='green', alpha=0.5, linestyles='dashed')
+    plt.vlines([30], min_-10, max_+10, colors='black', linestyles='dashed')
+    
+    plt.ylim([min_, max_])
     plt.ylabel('Average Trust Index')
     plt.xlabel('Training Round: $t$')
     plt.legend(ncols=2, bbox_to_anchor=(1,1.2), edgecolor='white')

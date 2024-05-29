@@ -100,7 +100,8 @@ class Torch_Model_Plugin:
     
     
     def save(self, name, save_optimizer=True):
-        confirm_directory(self.save_directory)
+        # confirm_directory(self.save_directory)
+        confirm_directory( '/'.join(f'{self.save_directory}{name}'.split('/')[:-1]) )
         self.save_weights(self.save_directory+name, save_optimizer=save_optimizer)
         return
     

@@ -232,8 +232,28 @@ def hyperparameter_analysis_healing_set_size(dataset_names, results_path_local: 
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'VTBA',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': 'H-10',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'H-50',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'H-100',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': 'H-500',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': 'H-1000',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': 'H-10-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': 'H-50-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': 'H-100-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': 'H-500-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': 'H-1000-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-1)': 'H-5000-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': 'O-10',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'O-50',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'O-100',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': 'O-500',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': 'O-1000',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': 'O-10-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': 'O-50-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': 'O-100-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': 'O-500-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': 'O-1000-1',
+        
     }
     
     # start generating figure of hyperparameter analysis
@@ -241,15 +261,11 @@ def hyperparameter_analysis_healing_set_size(dataset_names, results_path_local: 
     keys = ['test_acc', 'poisoned_acc']
     healing_set_sizes = [10, 50, 100, 500, 1000]
     server_natures = ['heldout', 'ood']
-    server_markers = ['o', '^']
     
     figs = []
     for d, dataset_name in enumerate(dataset_names):
-        
-        fig = plt.figure(figsize=(5, 2.5))
         for s, server_nature in enumerate(server_natures):
             
-            server_label = f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
             server_types = []
             for healing_set_size in healing_set_sizes:
                 server_types.append(f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-{healing_set_size})')
@@ -263,17 +279,17 @@ def hyperparameter_analysis_healing_set_size(dataset_names, results_path_local: 
             )
             
             for c, clients_distribution in enumerate(clients_distributions):
-                plt.plot(results_arr[0, c, :, 0], marker=server_markers[s], label=f'CA: {nicer_names[server_label]}')#, color='blue')
-                plt.plot(results_arr[0, c, :, 1], marker=server_markers[s], label=f'ASR: {nicer_names[server_label]}')#, color='red')
-            
-        plt.xticks(range(len(healing_set_sizes)), healing_set_sizes)
-        plt.yticks(np.arange(0., 1.0, 0.15))
-        plt.ylabel('Percentage')
-        plt.xlabel('Healing Set Size: $|D_h|$')
-        plt.legend(ncols=2)
-        plt.tight_layout()
-        
-        figs.append(fig)
+                fig = plt.figure(figsize=(2.5, 2))
+                plt.plot(results_arr[d, c, :, 0], marker='s', label='CA', color='blue')
+                plt.plot(results_arr[d, c, :, 1], marker='^', label='ASR', color='red')
+                plt.xticks(range(len(healing_set_sizes)), healing_set_sizes)
+                plt.yticks(np.arange(0., 1.0, 0.15))
+                plt.ylabel('Percentage')
+                plt.xlabel('Healing Set Size: $|D_h|$')
+                plt.legend()
+                plt.tight_layout()
+                
+                figs.append(fig)
     
     if save_fig:
         with PdfPages('p1_hasnets/__paper__/figures/hyperparameter_healing_set_size.pdf') as p:
@@ -289,8 +305,28 @@ def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_f
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'VTBA',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': 'H-10',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'H-50',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'H-100',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': 'H-500',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': 'H-1000',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': 'H-10-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': 'H-50-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': 'H-100-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': 'H-500-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': 'H-1000-1',
+        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-1)': 'H-5000-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': 'O-10',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'O-50',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'O-100',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': 'O-500',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': 'O-1000',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': 'O-10-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': 'O-50-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': 'O-100-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': 'O-500-1',
+        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': 'O-1000-1',
+        
     }
     
     # start generating figure of hyperparameter analysis
@@ -301,13 +337,11 @@ def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_f
         {'simple_(poison-0.25)_(scale-5)': 0.45},
     ]
     keys = ['test_acc', 'poisoned_acc']
+    healing_set_sizes = [10, 50, 100, 500, 1000]
     server_natures = ['heldout', 'ood']
-    server_markers = ['o', '^']
     
     figs = []
     for d, dataset_name in enumerate(dataset_names):
-        
-        fig = plt.figure(figsize=(5, 2.5))
         for s, server_nature in enumerate(server_natures):
             
             server_types = [f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)']
@@ -320,17 +354,17 @@ def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_f
                 results_path_local=results_path_local
             )
             
-            plt.plot(results_arr[0, :, 0, 0], marker='s', label=f'CA: {nicer_names[server_types[0]]}')#, color='blue')
-            plt.plot(results_arr[0, :, 0, 1], marker='^', label=f'ASR: {nicer_names[server_types[0]]}')#, color='red')
-        
-        plt.xticks(range(len(clients_distributions)), [1, 2, 3, 5])
-        plt.yticks(np.arange(0., 1.0, 0.15))
-        plt.ylabel('Percentage')
-        plt.xlabel('Backdoor Scaling Constant: $s_b$')
-        plt.legend(ncols=2)
-        plt.tight_layout()
-        
-        figs.append(fig)
+            fig = plt.figure(figsize=(2.5, 2))
+            plt.plot(results_arr[d, :, 0, 0], marker='s', label='CA', color='blue')
+            plt.plot(results_arr[d, :, 0, 1], marker='^', label='ASR', color='red')
+            # plt.xticks(range(len(clients_distribution)))
+            plt.yticks(np.arange(0., 1.0, 0.15))
+            plt.ylabel('Percentage')
+            plt.xlabel('Backdoor Scaling')
+            plt.legend()
+            plt.tight_layout()
+            
+            figs.append(fig)
     
     if save_fig:
         with PdfPages('p1_hasnets/__paper__/figures/hyperparameter_backdoor_scaling.pdf') as p:
@@ -340,14 +374,12 @@ def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_f
     return
 
 
-def hyperparameter_analysis_clients_ratio(dataset_names, results_path_local: str, save_fig: bool=True):
+def hyperparameter_analysis_clients_ratio(dataset_names, results_path_local: str):
     
     nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'VTBA',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
     }
     
     # start generating figure of hyperparameter analysis
@@ -355,18 +387,14 @@ def hyperparameter_analysis_clients_ratio(dataset_names, results_path_local: str
     keys = ['test_acc', 'poisoned_acc']
     clients_ratios = [0.1, 0.2, 0.3, 0.4]
     server_natures = ['heldout']
-    server_markers = ['o', '^']
     
     figs = []
     for d, dataset_name in enumerate(dataset_names):
-        
-        fig = plt.figure(figsize=(5, 2.5))
         for s, server_nature in enumerate(server_natures):
             
-            server_label = f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
             server_types = []
             for clients_ratio in clients_ratios:
-                server_types.append(f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-{clients_ratio})')
+                server_types.append(f'hasnet_heldout_(num_clients-100)_(clients_ratio-{clients_ratio})')
                 
             results_arr = load_results_from_settings(
                 [dataset_name], 
@@ -376,23 +404,22 @@ def hyperparameter_analysis_clients_ratio(dataset_names, results_path_local: str
                 results_path_local=results_path_local
             )
             
-            # for c, clients_distribution in enumerate(clients_distributions):
-            plt.plot(results_arr[0, 0, :, 0], marker=server_markers[s], label=f'CA: {nicer_names[server_label]}')#, color='blue')
-            plt.plot(results_arr[0, 0, :, 1], marker=server_markers[s], label=f'ASR: {nicer_names[server_label]}')#, color='red')
-        
-        plt.xticks(range(len(clients_ratios)), clients_ratios)
-        plt.yticks(np.arange(0., 1.0, 0.15))
-        plt.ylabel('Percentage')
-        plt.xlabel('Clients Ratio: $c/n$')
-        plt.legend(ncols=2)
-        plt.tight_layout()
-        
-        figs.append(fig)
+            for c, clients_distribution in enumerate(clients_distributions):
+                fig = plt.figure(figsize=(2.5, 2))
+                plt.plot(results_arr[d, c, :, 0], marker='s', label='CA', color='blue')
+                plt.plot(results_arr[d, c, :, 1], marker='^', label='ASR', color='red')
+                plt.xticks(range(len(clients_ratios)), clients_ratios)
+                plt.yticks(np.arange(0., 1.0, 0.15))
+                plt.ylabel('Percentage')
+                plt.xlabel('Clients Ratio: $c/n$')
+                plt.legend()
+                plt.tight_layout()
+                
+                figs.append(fig)
     
-    if save_fig:
-        with PdfPages('p1_hasnets/__paper__/figures/hyperparameter_clients_ratio.pdf') as p:
-            for fig in figs:
-                fig.savefig(p, format='pdf')
+    with PdfPages('p1_hasnets/__paper__/figures/hyperparameter_clients_ratio.pdf') as p:
+        for fig in figs:
+            fig.savefig(p, format='pdf')
     
     return
 
@@ -610,8 +637,8 @@ def outnumbering_backdoored_clients_analysis(dataset_names, results_path_local: 
                 )
                 
                 print(dataset_name, server_type, keys)
-                plt.plot(results_arr[0, :, 0, 0], marker=server_markers[s], label=f'CA: {nicer_names[server_type]}')#, color='blue')
-                plt.plot(results_arr[0, :, 0, 1], marker=server_markers[s], label=f'ASR: {nicer_names[server_type]}')#, color='red')
+                plt.plot(results_arr[d, :, 0, 0], marker=server_markers[s], label=f'CA: {nicer_names[server_type]}')#, color='blue')
+                plt.plot(results_arr[d, :, 0, 1], marker=server_markers[s], label=f'ASR: {nicer_names[server_type]}')#, color='red')
             
             plt.xticks(range(len(clients_distributions)), ['{:.2f}'.format(k) for k in np.arange(0.45, 0.45+0.1*len(clients_distributions), 0.1)])
             plt.yticks(np.arange(0., 1.0, 0.15))

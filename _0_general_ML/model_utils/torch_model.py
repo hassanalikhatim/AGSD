@@ -50,7 +50,8 @@ class Torch_Model(Torch_Model_Plugin):
         
         torch.save(self.model.state_dict(), name+'.pth')
         if save_optimizer:
-            torch.save(self.optimizer.state_dict(), name+'_optimizer.pth')
+            try: torch.save(self.optimizer.state_dict(), name+'_optimizer.pth')
+            except: print('Unable to save optimizer.')
         
         return
     

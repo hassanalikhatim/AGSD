@@ -12,6 +12,17 @@ from _3_federated_learning_utils.servers.server import Server
 
 
 class Server_Deepsight(Server):
+    """
+    DeepSight: Mitigating Backdoor Attacks in Federated Learning Through Deep Model Inspection
+    URL: https://www.ndss-symposium.org/wp-content/uploads/2022-156-paper.pdf
+    
+    @article{rieger2022deepsight,
+        title={Deepsight: Mitigating backdoor attacks in federated learning through deep model inspection},
+        author={Rieger, Phillip and Nguyen, Thien Duc and Miettinen, Markus and Sadeghi, Ahmad-Reza},
+        journal={arXiv preprint arXiv:2201.00763},
+        year={2022}
+    }
+    """
     
     def __init__(
         self,

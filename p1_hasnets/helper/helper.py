@@ -63,15 +63,23 @@ class Helper_Hasnets:
     
     def prepare_model_name(self, model_name_prefix='federated'):
         
-        self.model_name = model_name_prefix
+        model_name_split_prefix = ''
+        if 'split_type' in self.my_model_configuration.keys() and self.my_model_configuration['split_type'] != 'iid':
+            model_name_split_prefix = f'_(split_type-{self.my_model_configuration['split_type']})'
+        
+        model_name_alpha_prefix = ''
+        if 'alpha' in self.my_model_configuration.keys() and self.my_model_configuration['alpha'] != 0:
+            model_name_alpha_prefix = f'_(alpha-{self.my_model_configuration['alpha']})/'
+        
+        self.model_name = f'{model_name_split_prefix}{model_name_alpha_prefix}{model_name_prefix}'
         for key in self.my_model_configuration.keys():
             if key == 'gpu_number': self.model_name += '_(gpu_number-0)'
-            elif key == 'split_type' and self.my_model_configuration[key] == 'iid': pass
-            elif key == 'alpha' and self.my_model_configuration[key] == 0: pass
+            elif (key == 'split_type') or (key == 'alpha'): pass
             else: self.model_name += '_({}-{})'.format(key, self.my_model_configuration[key])
             
         self.model_name_cont = self.model_name + '_continued'
-            
+        # print(self.model_name)
+        
         return
     
     

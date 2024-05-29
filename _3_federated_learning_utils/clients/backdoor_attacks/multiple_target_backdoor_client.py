@@ -11,6 +11,21 @@ from _1_adversarial_ML.backdoor_attacks.multiple_target_backdoor_attack import M
 
 
 class Multiple_Target_Backdoor_Client(Simple_Backdoor_Client):
+    """
+    Code for:
+    
+    Dynamic Backdoor Attacks Against Machine Learning Models
+    URL: https://arxiv.org/pdf/2003.03675
+    
+    @inproceedings{salem2022dynamic,
+        title={Dynamic backdoor attacks against machine learning models},
+        author={Salem, Ahmed and Wen, Rui and Backes, Michael and Ma, Shiqing and Zhang, Yang},
+        booktitle={2022 IEEE 7th European Symposium on Security and Privacy (EuroS\&P)},
+        pages={703--718},
+        year={2022},
+        organization={IEEE}
+    }
+    """
     
     def __init__(
         self, data: Torch_Dataset, 

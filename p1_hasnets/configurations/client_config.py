@@ -35,6 +35,14 @@ multiple_target_backdoor_client_configuration = {
     'scale': 1,
     'num_targets': 4
 }
+multitrigger_multitarget_backdoor_client_configuration = {
+    'local_epochs': local_epochs,
+    'trigger': None,
+    'target': 0,
+    'poison_ratio': 0.8,
+    'scale': 1,
+    'num_targets': 4
+}
 class_specific_backdoor_client_configuration = {
     'local_epochs': local_epochs,
     'trigger': None,
@@ -79,6 +87,7 @@ client_configurations = {
     'neurotoxin_backdoor': neurotoxin_backdoor_client_configuration,
     'iba_backdoor': iba_backdoor_client_configuration,
     'multiple_target_backdoor': multiple_target_backdoor_client_configuration,
+    'multitrigger_multitarget_backdoor': multitrigger_multitarget_backdoor_client_configuration,
     'flip_defense': flip_defense_client_configuration,
     'visible_backdoor_initially_good': simple_backdoor_client_configuration,
     'class_specific_backdoor': class_specific_backdoor_client_configuration,
@@ -190,5 +199,17 @@ different_clients_configured = {
     'multiple_target_(poison-0.45)_(scale-2)': {'type': 'multiple_target_backdoor', 'poison_ratio': 0.45, 'scale': 2},
     'multiple_target_(poison-0.55)_(scale-2)': {'type': 'multiple_target_backdoor', 'poison_ratio': 0.55, 'scale': 2},
     'multiple_target_(poison-0.65)_(scale-2)': {'type': 'multiple_target_backdoor', 'poison_ratio': 0.65, 'scale': 2},
+    
+    'multitrigger_multitarget_(poison-0.25)_(scale-1)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.25, 'scale': 1},
+    'multitrigger_multitarget_(poison-0.35)_(scale-1)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.35, 'scale': 1},
+    'multitrigger_multitarget_(poison-0.45)_(scale-1)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.45, 'scale': 1},
+    'multitrigger_multitarget_(poison-0.55)_(scale-1)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.55, 'scale': 1},
+    'multitrigger_multitarget_(poison-0.65)_(scale-1)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.65, 'scale': 1},
+    
+    'multitrigger_multitarget_(poison-0.25)_(scale-2)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.25, 'scale': 2},
+    'multitrigger_multitarget_(poison-0.35)_(scale-2)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.35, 'scale': 2},
+    'multitrigger_multitarget_(poison-0.45)_(scale-2)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.45, 'scale': 2},
+    'multitrigger_multitarget_(poison-0.55)_(scale-2)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.55, 'scale': 2},
+    'multitrigger_multitarget_(poison-0.65)_(scale-2)': {'type': 'multitrigger_multitarget_backdoor', 'poison_ratio': 0.65, 'scale': 2},
     
 }

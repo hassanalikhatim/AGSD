@@ -187,10 +187,10 @@ model_configurations = {
     # non standard non iid settings
     'cifar10_non_sota_standard_non_iid': cifar10_model_configuration_non_sota_standard_non_iid,
     'cifar10_non_sota_mesas_non_iid': cifar10_model_configuration_non_sota_mesas_non_iid,
-    'gtsrb_non_sota_standard_non_iid_01': gtsrb_non_sota_standard_non_iid_01,
-    'gtsrb_non_sota_standard_non_iid_03': gtsrb_non_sota_standard_non_iid_03,
-    'gtsrb_non_sota_standard_non_iid_05': gtsrb_non_sota_standard_non_iid_05,
-    'gtsrb_non_sota_standard_non_iid_07': gtsrb_non_sota_standard_non_iid_07,
-    'gtsrb_non_sota_standard_non_iid_09': gtsrb_non_sota_standard_non_iid_09,
+    'gtsrb_non_sota_standard_non_iid1': gtsrb_non_sota_standard_non_iid_01,
+    'gtsrb_non_sota_standard_non_iid3': gtsrb_non_sota_standard_non_iid_03,
+    'gtsrb_non_sota_standard_non_iid5': gtsrb_non_sota_standard_non_iid_05,
+    'gtsrb_non_sota_standard_non_iid7': gtsrb_non_sota_standard_non_iid_07,
+    'gtsrb_non_sota_standard_non_iid9': gtsrb_non_sota_standard_non_iid_09,
     'gtsrb_non_sota_mesas_non_iid': gtsrb_non_sota_mesas_non_iid
 }

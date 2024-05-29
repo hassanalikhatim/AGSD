@@ -1,2 +1,1 @@
-# AGSD
-Adversarially Guided Stateful Defense Against Backdoor Attacks in Federated Learning
+# AGSD: Adversarially Guided Stateful Defense Against Backdoor Attacks in Deep Federated Learning
