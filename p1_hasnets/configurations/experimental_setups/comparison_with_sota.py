@@ -22,22 +22,18 @@ clients_distributions = [
 
 
 server_types = [
-    # # SOTA SERVERS
-    # 'dp_(num_clients-100)_(clients_ratio-0.1)',
-    # 'krum_(num_clients-100)_(clients_ratio-0.1)',
-    # 'foolsgold_(num_clients-100)_(clients_ratio-0.1)',
-    # 'deepsight_(num_clients-100)_(clients_ratio-0.1)',
-    # 'simple_(num_clients-100)_(clients_ratio-0.1)',
-    # 'flame_(num_clients-100)_(clients_ratio-0.1)',
-    # 'mesas_(num_clients-100)_(clients_ratio-0.1)',
+    # SOTA SERVERS
+    'dp_(num_clients-100)_(clients_ratio-0.1)',
+    'krum_(num_clients-100)_(clients_ratio-0.1)',
+    'foolsgold_(num_clients-100)_(clients_ratio-0.1)',
+    'deepsight_(num_clients-100)_(clients_ratio-0.1)',
+    'simple_(num_clients-100)_(clients_ratio-0.1)',
+    'flame_(num_clients-100)_(clients_ratio-0.1)',
+    'mesas_(num_clients-100)_(clients_ratio-0.1)',
     
-    # # HASNET SERVER ANALYSIS - THIS WILL BE A VERY DETAILED ANALYSIS
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-    # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-    # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-    # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)',
-    # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)',
-    # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)',
-    # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)',
+    # # AGSD SERVER ANALYSIS - THIS WILL BE A VERY DETAILED ANALYSIS
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+    # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
 ]

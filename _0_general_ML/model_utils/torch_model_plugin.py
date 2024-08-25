@@ -24,13 +24,19 @@ loss_functions = {
 
 model_architectures = {
     'mnist_cnn': MNIST_CNN,
+    
     'resnet18_gtsrb': Resnet18_GTSRB,
     'resnet50_gtsrb': Resnet50_GTSRB,
     'cnn_gtsrb': CNN_GTSRB,
+    
     'cifar10_vgg11': cifar10_vgg11,
     'cifar10_resnet18': Resnet18_CIFAR10,
     'cifar10_resnet50': Resnet50_CIFAR10,
-    'cifar4_vgg11': cifar4_vgg11
+    
+    'cifar4_vgg11': cifar4_vgg11,
+    
+    'kaggle_imagenet_resnet50': Resnet50_Imagenet,
+    'kaggle_imagenet_resnet18': Resnet18_Imagenet,
 }
 
 

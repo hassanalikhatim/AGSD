@@ -62,7 +62,7 @@ def compile_results_shot(
                 helper.dictionary_to_save[each_key].append(helper.dictionary_to_save[each_key][-1])
                 
         print()
-        helper.save_dataframe(force_overwrite=True)
+        helper.save_dataframe(force_overwrite=False)
         print('dataframe saved at:', helper.csv_path_and_filename)
     
     return helper.experiment_conducted
@@ -75,7 +75,11 @@ def main(orientation=0):
     else:
         _experimental_setups = experimental_setups
     
-    # starts here
+    total_experiments = [len(es.dataset_names)*len(es.clients_distributions)*len(es.server_types) for es in experimental_setups]
+    total_experiments = np.sum(total_experiments)
+    current_experiment_number = 0
+    not_conducted_experiments = 0
+    # iterating over the exprimental_setups
     for experimental_setup in _experimental_setups:
         dataset_names = experimental_setup.dataset_names
         clients_distributions = experimental_setup.clients_distributions
@@ -90,11 +94,6 @@ def main(orientation=0):
             _dataset_names = dataset_names
             _clients_distributions = clients_distributions
             _server_types = server_types
-        
-        # one experimental setup starts here
-        total_experiments = len(dataset_names) * len(clients_distributions) * len(server_types)
-        current_experiment_number = 0
-        not_conducted_experiments = 0
         
         # iterating over data
         for dataset_name in _dataset_names:

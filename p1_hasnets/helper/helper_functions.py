@@ -44,6 +44,7 @@ implemented_clients = {
     'visible_backdoor_initially_good': Visible_Backdoor_Initially_Clean,
     'class_specific_backdoor': Class_Specific_Backdoor_Client,
     'low_confidence_backdoor': Low_Confidence_Backdoor_Client,
+    'distributed_backdoor': Distributed_Backdoor_Client,
     'adv_training_backdoor': Adversarial_Training_Backdoor_Client,
     'adv_optimization_backdoor': Adversarial_Optimization_Backdoor_Client
 }

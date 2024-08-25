@@ -20,14 +20,14 @@ nicer_names = {
     'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
     'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame',
     'mesas_(num_clients-100)_(clients_ratio-0.1)': 'MESAS',
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfh{}3',
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfo{}3',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
+    'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
+    'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfh{}3',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfo{}3',
     
     'multiple_target_(poison-0.25)_(scale-2)': 'DyBA & 0.25',
     'multiple_target_(poison-0.35)_(scale-2)': 'DyBA & 0.35',
@@ -46,6 +46,9 @@ nicer_names = {
     'low_confidence_(poison-0.45)_(scale-2)': 'LBA & 0.45',
     'low_confidence_(poison-0.55)_(scale-2)': 'LBA & 0.55',
     'low_confidence_(poison-0.65)_(scale-2)': 'LBA & 0.65',
+    
+    'distributed_(poison-0.25)_(scale-2)': 'DBA & 0.25',
+    'distributed_(poison-0.45)_(scale-2)': 'DBA & 0.45',
     
     'adv_training_(poison-0.25)_(scale-2)': 'RBA & 0.25',
     'adv_optimization_(poison-0.25)_(scale-2)': 'PBA & 0.25',
@@ -74,8 +77,8 @@ def adaptive_attacks_evaluation_dyba(dataset_names, results_path_local: str):
         # 'deepsight_(num_clients-100)_(clients_ratio-0.1)',
         'flame_(num_clients-100)_(clients_ratio-0.1)',
         # 'mesas_(num_clients-100)_(clients_ratio-0.1)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -133,8 +136,8 @@ def adaptive_attacks_evaluation_mtba(dataset_names, results_path_local: str):
         # 'deepsight_(num_clients-100)_(clients_ratio-0.1)',
         'flame_(num_clients-100)_(clients_ratio-0.1)',
         # 'mesas_(num_clients-100)_(clients_ratio-0.1)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -192,14 +195,14 @@ def adaptive_attacks_evaluation_lba(dataset_names, results_path_local: str):
         # 'deepsight_(num_clients-100)_(clients_ratio-0.1)',
         'flame_(num_clients-100)_(clients_ratio-0.1)',
         # 'mesas_(num_clients-100)_(clients_ratio-0.1)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
-        # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
-        # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-        # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-        # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
+        # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
+        # 'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        # 'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -234,7 +237,66 @@ def adaptive_attacks_evaluation_lba(dataset_names, results_path_local: str):
     return table_string
 
 
-def adaptive_attacks_evaluation_others(dataset_names, results_path_local: str):
+def adaptive_attacks_evaluation_dba(dataset_names, results_path_local: str):
+    
+    # different backdoor clients (one at a time) with 30% backdoor distribution
+    clients_distributions = [
+        # LBA
+        {'distributed_(poison-0.25)_(scale-2)': 0.45},
+        {'distributed_(poison-0.45)_(scale-2)': 0.45},
+    ]
+    
+    server_types = [
+        'simple_(num_clients-100)_(clients_ratio-0.1)',
+        # 'dp_(num_clients-100)_(clients_ratio-0.1)',
+        'krum_(num_clients-100)_(clients_ratio-0.1)',
+        # 'foolsgold_(num_clients-100)_(clients_ratio-0.1)',
+        # 'deepsight_(num_clients-100)_(clients_ratio-0.1)',
+        'flame_(num_clients-100)_(clients_ratio-0.1)',
+        # 'mesas_(num_clients-100)_(clients_ratio-0.1)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
+        # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
+        # 'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        # 'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+    ]
+    
+    keys = ['test_acc', 'poisoned_acc']
+    
+    results_arr = load_results_from_settings(
+        dataset_names, 
+        clients_distributions, 
+        server_types, 
+        keys=keys,
+        results_path_local=results_path_local
+    )
+    # data x client x server x key
+    print(results_arr.shape)
+    print('|c|' + 'c|'*len(dataset_names)*len(clients_distributions))
+    
+    table_string = ''
+    for c, clients_distribution in enumerate(clients_distributions):
+        table_string += '{}'.format(nicer_names[list(clients_distribution.keys())[0]])
+        
+        for d, dataset_name in enumerate(dataset_names):
+            for s, server_type in enumerate(server_types):
+                
+                result_ = results_arr[d, c, s]
+                table_string += ' & {}({})'.format(
+                    '{:.2f}'.format(result_[0]) if result_[0] >= 0 else '-',
+                    '{:.2f}'.format(result_[1]) if result_[1] >= 0 else '-'
+                )
+        
+            table_string += '\n'
+        table_string += '\\\\\n'
+    
+    return table_string
+
+
+def adaptive_attacks_evaluation_specifically_desined(dataset_names, results_path_local: str):
     
     # different backdoor clients (one at a time) with 30% backdoor distribution
     clients_distributions = [
@@ -253,14 +315,14 @@ def adaptive_attacks_evaluation_others(dataset_names, results_path_local: str):
         # 'deepsight_(num_clients-100)_(clients_ratio-0.1)',
         'flame_(num_clients-100)_(clients_ratio-0.1)',
         # 'mesas_(num_clients-100)_(clients_ratio-0.1)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
-        # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
-        # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-        # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-        # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
+        # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)',
+        # 'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        # 'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']

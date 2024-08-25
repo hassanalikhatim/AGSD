@@ -12,8 +12,8 @@ clients_distributions = [
 
 
 server_types = [
-    'hgsd_id_initially_undefended_10',
-    'hgsd_id_initially_undefended_20',
-    'hgsd_id_initially_undefended_30',
-    'hgsd_id_initially_undefended_40',
+    'agsd_id_initially_undefended_10',
+    'agsd_id_initially_undefended_20',
+    'agsd_id_initially_undefended_30',
+    'agsd_id_initially_undefended_40',
 ]

@@ -37,7 +37,7 @@ class Torch_Model(Torch_Model_Plugin):
         
         train_loader, test_loader = self.data.prepare_data_loaders(batch_size=self.model_configuration['batch_size'])
         
-        self.test_shot(test_loader, verbose=verbose)
+        test_loss, test_acc = self.test_shot(test_loader, verbose=verbose)
         for epoch in range(start_epoch, epochs+1):
             train_loss, train_acc, train_str = self.train_shot(train_loader, epoch, verbose=verbose)
             if validate:

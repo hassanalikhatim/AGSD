@@ -11,5 +11,5 @@ clients_distributions = [
 
 
 server_types = [
-    'hasnet_hidden_values_server_simple_backdoor'
+    'agsd_id_hidden_values_server_simple_backdoor'
 ]

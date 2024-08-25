@@ -6,23 +6,63 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 from .loading import load_results_from_settings
 
+from utils_.general_utils import confirm_directory
+
+
+
+nicer_names = {
+        
+    'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
+    'clean': 'Clean', 
+    'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
+    'simple_(num_clients-100)_(clients_ratio-0.1)': 'FedAvg',
+    'dp_(num_clients-100)_(clients_ratio-0.1)': 'DP-SGD',
+    'krum_(num_clients-100)_(clients_ratio-0.1)': 'Krum',
+    'foolsgold_(num_clients-100)_(clients_ratio-0.1)': 'FoolsGold',
+    'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
+    'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame',
+    'mesas_(num_clients-100)_(clients_ratio-0.1)': 'MESAS',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
+    'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'AGSD (ID)',
+    'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'AGSD (OOD)',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': 'AGSD (ID-3)',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': 'AGSD (OOD-3)',
+    
+    'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
+    
+}
+
+
+def save_figure_multiple_pages(figs: list, save_fig_path_and_name: str):
+    
+    confirm_directory( '/'.join(save_fig_path_and_name.split('/')[:-1]) )
+    
+    with PdfPages(save_fig_path_and_name) as p:
+            for fig in figs:
+                fig.savefig(p, format='pdf')
+            print('figure saved.')
+    
+    return
 
 
 def comparison_with_sota_(dataset_names, results_path_local: str):
     
-    nicer_names = {
-        'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
-        'clean': 'Clean', 
-        'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
-        'simple_(num_clients-100)_(clients_ratio-0.1)': 'FedAvg',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (Heldout)',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (Noise)',
-        'dp_(num_clients-100)_(clients_ratio-0.1)': 'DP-SGD',
-        'krum_(num_clients-100)_(clients_ratio-0.1)': 'Krum',
-        'foolsgold_(num_clients-100)_(clients_ratio-0.1)': 'FoolsGold',
-        'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
-        'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame'
-    }
+    # nicer_names = {
+    #     'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
+    #     'clean': 'Clean', 
+    #     'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
+    #     'simple_(num_clients-100)_(clients_ratio-0.1)': 'FedAvg',
+    #     'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (ID)',
+    #     'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (Noise)',
+    #     'dp_(num_clients-100)_(clients_ratio-0.1)': 'DP-SGD',
+    #     'krum_(num_clients-100)_(clients_ratio-0.1)': 'Krum',
+    #     'foolsgold_(num_clients-100)_(clients_ratio-0.1)': 'FoolsGold',
+    #     'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
+    #     'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame'
+    # }
     
     clients_distributions = [
         {},
@@ -46,9 +86,9 @@ def comparison_with_sota_(dataset_names, results_path_local: str):
         'foolsgold_(num_clients-100)_(clients_ratio-0.1)',
         'deepsight_(num_clients-100)_(clients_ratio-0.1)',
         'flame_(num_clients-100)_(clients_ratio-0.1)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -85,7 +125,7 @@ def comparison_with_sota_(dataset_names, results_path_local: str):
     
 def comparison_with_sota(dataset_names, results_path_local: str):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
@@ -96,12 +136,12 @@ def comparison_with_sota(dataset_names, results_path_local: str):
         'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
         'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame',
         'mesas_(num_clients-100)_(clients_ratio-0.1)': 'MESAS',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
     }
     
     # different backdoor clients (one at a time) with 30% backdoor distribution
@@ -122,12 +162,11 @@ def comparison_with_sota(dataset_names, results_path_local: str):
         'deepsight_(num_clients-100)_(clients_ratio-0.1)',
         'flame_(num_clients-100)_(clients_ratio-0.1)',
         'mesas_(num_clients-100)_(clients_ratio-0.1)',
-        # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        # 'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-        # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        
+        # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -164,7 +203,7 @@ def comparison_with_sota(dataset_names, results_path_local: str):
 
 def non_iid_analysis(dataset_names, results_path_local: str):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
@@ -175,12 +214,12 @@ def non_iid_analysis(dataset_names, results_path_local: str):
         'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
         'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame',
         'mesas_(num_clients-100)_(clients_ratio-0.1)': 'MESAS',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
     }
     
     # different backdoor clients (one at a time) with 30% backdoor distribution
@@ -192,8 +231,8 @@ def non_iid_analysis(dataset_names, results_path_local: str):
         'simple_(num_clients-100)_(clients_ratio-0.1)',
         'krum_(num_clients-100)_(clients_ratio-0.1)',
         'flame_(num_clients-100)_(clients_ratio-0.1)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -226,21 +265,21 @@ def non_iid_analysis(dataset_names, results_path_local: str):
     return table_string
 
 
-def hyperparameter_analysis_healing_set_size(dataset_names, results_path_local: str, save_fig: bool=True):
+def hyperparameter_analysis_heldout_set_size(dataset_names, results_path_local: str, save_fig: bool=True):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'VTBA',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
     }
     
     # start generating figure of hyperparameter analysis
     clients_distributions = [ {'simple_(poison-0.25)': 0.45} ]
     keys = ['test_acc', 'poisoned_acc']
     healing_set_sizes = [10, 50, 100, 500, 1000]
-    server_natures = ['heldout', 'ood']
+    server_natures = ['id', 'ood']
     server_markers = ['o', '^']
     
     figs = []
@@ -249,10 +288,10 @@ def hyperparameter_analysis_healing_set_size(dataset_names, results_path_local: 
         fig = plt.figure(figsize=(5, 2.5))
         for s, server_nature in enumerate(server_natures):
             
-            server_label = f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
+            server_label = f'agsd_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
             server_types = []
             for healing_set_size in healing_set_sizes:
-                server_types.append(f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-{healing_set_size})')
+                server_types.append(f'agsd_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-{healing_set_size})')
             
             results_arr = load_results_from_settings(
                 [dataset_name], 
@@ -269,28 +308,26 @@ def hyperparameter_analysis_healing_set_size(dataset_names, results_path_local: 
         plt.xticks(range(len(healing_set_sizes)), healing_set_sizes)
         plt.yticks(np.arange(0., 1.0, 0.15))
         plt.ylabel('Percentage')
-        plt.xlabel('Healing Set Size: $|D_h|$')
+        plt.xlabel('Heldout Set Size: $|D_h|$')
         plt.legend(ncols=2)
         plt.tight_layout()
         
         figs.append(fig)
     
     if save_fig:
-        with PdfPages('p1_hasnets/__paper__/figures/hyperparameter_healing_set_size.pdf') as p:
-            for fig in figs:
-                fig.savefig(p, format='pdf')
+        save_figure_multiple_pages(figs, '__paper__/figures/hyperparameter_heldout_set_size.pdf')
     
     return
 
 
 def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_fig: bool=True):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'VTBA',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
     }
     
     # start generating figure of hyperparameter analysis
@@ -301,7 +338,7 @@ def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_f
         {'simple_(poison-0.25)_(scale-5)': 0.45},
     ]
     keys = ['test_acc', 'poisoned_acc']
-    server_natures = ['heldout', 'ood']
+    server_natures = ['id', 'ood']
     server_markers = ['o', '^']
     
     figs = []
@@ -310,7 +347,7 @@ def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_f
         fig = plt.figure(figsize=(5, 2.5))
         for s, server_nature in enumerate(server_natures):
             
-            server_types = [f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)']
+            server_types = [f'agsd_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)']
             
             results_arr = load_results_from_settings(
                 [dataset_name], 
@@ -333,28 +370,26 @@ def hyperparameter_backdoor_scale(dataset_names, results_path_local: str, save_f
         figs.append(fig)
     
     if save_fig:
-        with PdfPages('p1_hasnets/__paper__/figures/hyperparameter_backdoor_scaling.pdf') as p:
-            for fig in figs:
-                fig.savefig(p, format='pdf')
+        save_figure_multiple_pages(figs, '__paper__/figures/hyperparameter_backdoor_scaling.pdf')
     
     return
 
 
 def hyperparameter_analysis_clients_ratio(dataset_names, results_path_local: str, save_fig: bool=True):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'VTBA',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
     }
     
     # start generating figure of hyperparameter analysis
     clients_distributions = [ {'simple_(poison-0.25)_(scale-2)': 0.45} ]
     keys = ['test_acc', 'poisoned_acc']
     clients_ratios = [0.1, 0.2, 0.3, 0.4]
-    server_natures = ['heldout']
+    server_natures = ['id']
     server_markers = ['o', '^']
     
     figs = []
@@ -363,10 +398,10 @@ def hyperparameter_analysis_clients_ratio(dataset_names, results_path_local: str
         fig = plt.figure(figsize=(5, 2.5))
         for s, server_nature in enumerate(server_natures):
             
-            server_label = f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
+            server_label = f'agsd_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
             server_types = []
             for clients_ratio in clients_ratios:
-                server_types.append(f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-{clients_ratio})')
+                server_types.append(f'agsd_{server_nature}_(num_clients-100)_(clients_ratio-{clients_ratio})')
                 
             results_arr = load_results_from_settings(
                 [dataset_name], 
@@ -383,30 +418,28 @@ def hyperparameter_analysis_clients_ratio(dataset_names, results_path_local: str
         plt.xticks(range(len(clients_ratios)), clients_ratios)
         plt.yticks(np.arange(0., 1.0, 0.15))
         plt.ylabel('Percentage')
-        plt.xlabel('Clients Ratio: $c/n$')
+        plt.xlabel('Clients Sampling Ratio: $c/n$')
         plt.legend(ncols=2)
         plt.tight_layout()
         
         figs.append(fig)
     
     if save_fig:
-        with PdfPages('p1_hasnets/__paper__/figures/hyperparameter_clients_ratio.pdf') as p:
-            for fig in figs:
-                fig.savefig(p, format='pdf')
+        save_figure_multiple_pages(figs, '__paper__/figures/hyperparameter_clients_ratio.pdf')
     
     return
 
 
 def ood_correctly_and_randomly_labeled(dataset_names, results_path_local: str):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'cifar10_non_sota': 'CIFAR-10', 'gtsrb_non_sota': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (OOD)',
-        'hasnet_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (OOD Random)',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (Gen)'
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (OOD)',
+        'agsd_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (OOD Random)',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (Gen)'
     }
     
     clients_distributions = [
@@ -416,9 +449,9 @@ def ood_correctly_and_randomly_labeled(dataset_names, results_path_local: str):
     ]
     
     server_types = [
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        # 'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)'
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -455,11 +488,11 @@ def ood_correctly_and_randomly_labeled(dataset_names, results_path_local: str):
 
 def _deprecated_generated_noise(dataset_names, results_path_local: str):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (Gen)',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{} (Gen)',
     }
     
     clients_distributions = [
@@ -469,7 +502,7 @@ def _deprecated_generated_noise(dataset_names, results_path_local: str):
     ]
     
     server_types = [
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -505,19 +538,19 @@ def _deprecated_generated_noise(dataset_names, results_path_local: str):
 
 def special_table(dataset_names, results_path_local: str):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
         'simple_(num_clients-100)_(clients_ratio-0.1)': 'FedAvg',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (Heldout)',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (Noise)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (ID)',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'HasNet (Noise)',
         'dp_(num_clients-100)_(clients_ratio-0.1)': 'DP-SGD',
         'krum_(num_clients-100)_(clients_ratio-0.1)': 'Krum',
         'foolsgold_(num_clients-100)_(clients_ratio-0.1)': 'FoolsGold',
         'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
         'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame',
-        'hasnet_another': 'Hasnet (Another)'
+        'agsd_another': 'Hasnet (Another)'
     }
     
     clients_distributions = [
@@ -529,9 +562,9 @@ def special_table(dataset_names, results_path_local: str):
     ]
     
     server_types = [
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_another'
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_another'
     ]
     
     keys = ['test_acc', 'poisoned_acc']
@@ -566,20 +599,24 @@ def special_table(dataset_names, results_path_local: str):
     return table_string
 
 
-def outnumbering_backdoored_clients_analysis(dataset_names, results_path_local: str, save_fig: bool=True):
+def hyperparameter_backdoored_clients_ratio(dataset_names, results_path_local: str, save_fig: bool=True):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'VTBA',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'AGSD (ID-100)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'HGSD (OOD-100)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (ID)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'AGSD (ID-100)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': 'AGSD (OOD)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': 'HGSD (OOD-100)',
     }
     
     # start generating figure of hyperparameter analysis
     clients_distributions = [
+        {'simple_(poison-0.25)_(scale-2)': 0.05},
+        {'simple_(poison-0.25)_(scale-2)': 0.15},
+        {'simple_(poison-0.25)_(scale-2)': 0.25},
+        {'simple_(poison-0.25)_(scale-2)': 0.35},
         {'simple_(poison-0.25)_(scale-2)': 0.45},
         {'simple_(poison-0.25)_(scale-2)': 0.55},
         {'simple_(poison-0.25)_(scale-2)': 0.65},
@@ -588,7 +625,7 @@ def outnumbering_backdoored_clients_analysis(dataset_names, results_path_local: 
     ]
     keys = ['test_acc', 'poisoned_acc']
     healing_set_sizes = [50]#, 100]
-    server_natures = ['heldout', 'ood']
+    server_natures = ['id', 'ood']
     server_markers = ['s', '^', 'o', 'x']
     
     figs = []
@@ -599,7 +636,7 @@ def outnumbering_backdoored_clients_analysis(dataset_names, results_path_local: 
             
             server_types = []
             for healing_set_size in healing_set_sizes:
-                server_type = f'hasnet_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-{healing_set_size})'
+                server_type = f'agsd_{server_nature}_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-{healing_set_size})'
             
                 results_arr = load_results_from_settings(
                     [dataset_name], 
@@ -613,26 +650,24 @@ def outnumbering_backdoored_clients_analysis(dataset_names, results_path_local: 
                 plt.plot(results_arr[0, :, 0, 0], marker=server_markers[s], label=f'CA: {nicer_names[server_type]}')#, color='blue')
                 plt.plot(results_arr[0, :, 0, 1], marker=server_markers[s], label=f'ASR: {nicer_names[server_type]}')#, color='red')
             
-            plt.xticks(range(len(clients_distributions)), ['{:.2f}'.format(k) for k in np.arange(0.45, 0.45+0.1*len(clients_distributions), 0.1)])
+            plt.xticks(range(len(clients_distributions)), ['{:.2f}'.format(k) for k in np.arange(0.05, 0.05+0.1*len(clients_distributions), 0.1)])
             plt.yticks(np.arange(0., 1.0, 0.15))
             plt.ylabel('Percentage')
-            plt.xlabel('$p/n$')
+            plt.xlabel('Backdoored clients ratio: $p/n$')
             plt.legend(ncols=2)
             plt.tight_layout()
             
             figs.append(fig)
     
     if save_fig:
-        with PdfPages('p1_hasnets/__paper__/figures/outnumbering_backdoored_clients.pdf') as p:
-            for fig in figs:
-                fig.savefig(p, format='pdf')
+        save_figure_multiple_pages(figs, '__paper__/figures/outnumbering_backdoored_clients.pdf')
     
     return
 
 
 def non_iid_data_distribution_analysis(dataset_names, results_path_local: str):
     
-    nicer_names = {
+    _nicer_names = {
         'mnist': 'MNIST', 'cifar10': 'CIFAR-10', 'gtsrb': 'GTSRB',
         'clean': 'Clean', 
         'simple_(poison-0.75)_(scale-2)': 'Simple Backdoor Attack',
@@ -643,14 +678,14 @@ def non_iid_data_distribution_analysis(dataset_names, results_path_local: str):
         'deepsight_(num_clients-100)_(clients_ratio-0.1)': 'DeepSight',
         'flame_(num_clients-100)_(clients_ratio-0.1)': 'Flame',
         'mesas_(num_clients-100)_(clients_ratio-0.1)': 'MESAS',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
-        'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfh{}3',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfo{}3',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfh{}',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\df{}',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': '\\dfo{}',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfh{}',
+        'not_used_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\df{}',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': '\\dfo{}',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfh{}3',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': '\\dfo{}3',
     }
     
     # different backdoor clients (one at a time) with 30% backdoor distribution
@@ -659,8 +694,8 @@ def non_iid_data_distribution_analysis(dataset_names, results_path_local: str):
     ]
     
     server_types = [
-        'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-        'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+        'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     ]
     
     keys = ['test_acc', 'poisoned_acc']

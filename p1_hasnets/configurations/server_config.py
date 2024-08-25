@@ -27,20 +27,20 @@ mesas_server_configuration = {
     'num_clients': num_clients,
     'clients_ratio': clients_ratio
 }
-hasnet_heldout_server_configuration = {
+agsd_id_server_configuration = {
     'num_clients': num_clients,
     'clients_ratio': clients_ratio,
     'healing_set_size': 50,
     'epsilon': 0.,
     'healing_epochs': 1
 }
-hasnet_noise_server_configuration = {
+agsd_ood_server_configuration = {
     'num_clients': num_clients,
     'clients_ratio': clients_ratio,
     'healing_set_size': 50,
     'epsilon': 0.,
     'healing_epochs': 1,
-    'hasnet_attack_iterations': 30
+    'hasnet_attack_iterations': 30  # this is not used in AGSD.
 }
 
 server_configurations = {
@@ -51,15 +51,15 @@ server_configurations = {
     'foolsgold': foolsgold_server_configuration,
     'flame': flame_server_configuration,
     'mesas': mesas_server_configuration,
-    # hasnet servers
-    'hasnet_heldout': hasnet_heldout_server_configuration,
-    'hasnet_noise': hasnet_noise_server_configuration,
-    'hasnet_ood': hasnet_noise_server_configuration,
-    'hasnet_ood_random_labelling': hasnet_noise_server_configuration,
-    'hasnet_ood_old': hasnet_noise_server_configuration,
-    'hasnet_hidden_values': hasnet_heldout_server_configuration,
-    'hgsd_id_initially_undefended': hasnet_heldout_server_configuration,
-    'hgsd_id_for_changing_clients': hasnet_heldout_server_configuration
+    # agsd_id servers
+    'agsd_id': agsd_id_server_configuration,
+    'hasnet_noise': agsd_ood_server_configuration,
+    'agsd_ood': agsd_ood_server_configuration,
+    'agsd_ood_random_labelling': agsd_ood_server_configuration,
+    'agsd_ood_old': agsd_ood_server_configuration,
+    'agsd_id_hidden_values': agsd_id_server_configuration,
+    'agsd_id_initially_undefended': agsd_id_server_configuration,
+    'agsd_id_for_changing_clients': agsd_id_server_configuration
 }
 
 
@@ -109,111 +109,87 @@ different_servers_configured = {
     'mesas_(num_clients-100)_(clients_ratio-0.4)': {'type': 'mesas', 'clients_ratio': 0.4},
     'mesas_(num_clients-100)_(clients_ratio-0.5)': {'type': 'mesas', 'clients_ratio': 0.4},
     
-    # DIFFERENT HASNET HELDOUT CONFIGURATIONS FOR EXPERIMENTS
+    # DIFFERENT AGSD ID HELDOUT CONFIGURATIONS FOR EXPERIMENTS
     # * * different number of clients
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.2)': {'type': 'hasnet_heldout', 'clients_ratio': 0.2},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.3)': {'type': 'hasnet_heldout', 'clients_ratio': 0.3},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.4)': {'type': 'hasnet_heldout', 'clients_ratio': 0.4},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.5)': {'type': 'hasnet_heldout', 'clients_ratio': 0.5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)': {'type': 'agsd_id', 'clients_ratio': 0.1},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.2)': {'type': 'agsd_id', 'clients_ratio': 0.2},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.3)': {'type': 'agsd_id', 'clients_ratio': 0.3},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.4)': {'type': 'agsd_id', 'clients_ratio': 0.4},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.5)': {'type': 'agsd_id', 'clients_ratio': 0.5},
     
     # * * different healing set sizes
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 10},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 50},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 100},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 500},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 1000},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 5000},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 10},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 100},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 500},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 1000},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 5000},
     
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 1},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 1},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 1},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 1},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 1},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-1)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 1},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 1},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 1},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 1},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 1},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 1},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-1)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 1},
     
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-5)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 5},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-5)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 5},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-5)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 5},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-5)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 5},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-5)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 5},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-5)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-5)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-5)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-5)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-5)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-5)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-5)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 5},
     
-    # DIFFERENT HASNET NOISE CONFIGURATIONS FOR EXPERIMENTS
+    # DIFFERENT AGSD OOD CONFIGURATIONS FOR EXPERIMENTS
     # * * different number of clients
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)': {'type': 'hasnet_noise', 'clients_ratio': 0.1},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.2)': {'type': 'hasnet_noise', 'clients_ratio': 0.2},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.3)': {'type': 'hasnet_noise', 'clients_ratio': 0.3},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.4)': {'type': 'hasnet_noise', 'clients_ratio': 0.4},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.5)': {'type': 'hasnet_noise', 'clients_ratio': 0.5},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)': {'type': 'agsd_ood', 'clients_ratio': 0.1},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.2)': {'type': 'agsd_ood', 'clients_ratio': 0.2},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.3)': {'type': 'agsd_ood', 'clients_ratio': 0.3},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.4)': {'type': 'agsd_ood', 'clients_ratio': 0.4},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.5)': {'type': 'agsd_ood', 'clients_ratio': 0.5},
     
     # * * different healing set sizes
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 10},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 50},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 100},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 500},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 1000},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 5000},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 10},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 100},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 500},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 1000},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 5000},
     
-    # * * different attack_iterations
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(hasnet_attack_iterations-10)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 100, 'hasnet_attack_iterations': 10},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(hasnet_attack_iterations-30)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 100, 'hasnet_attack_iterations': 30},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(hasnet_attack_iterations-50)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 100, 'hasnet_attack_iterations': 50},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(hasnet_attack_iterations-100)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 100, 'hasnet_attack_iterations': 100},
-    'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(hasnet_attack_iterations-500)': {'type': 'hasnet_noise', 'clients_ratio': 0.1, 'healing_set_size': 100, 'hasnet_attack_iterations': 500},
+    # agsd_id ood with 1 healing epoch
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 1},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 1},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 1},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 1},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 1},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-1)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 1},
     
-    # DIFFERENT HASNET OOD CONFIGURATIONS FOR EXPERIMENTS
-    # DIFFERENT HASNET HELDOUT CONFIGURATIONS FOR EXPERIMENTS
-    # * * different number of clients
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)': {'type': 'hasnet_ood', 'clients_ratio': 0.1},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.2)': {'type': 'hasnet_ood', 'clients_ratio': 0.2},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.3)': {'type': 'hasnet_ood', 'clients_ratio': 0.3},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.4)': {'type': 'hasnet_ood', 'clients_ratio': 0.4},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.5)': {'type': 'hasnet_ood', 'clients_ratio': 0.5},
+    # agsd_id ood with 5 healing epoch
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 5},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 5},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 5},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 5},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 5},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 5},
     
-    # * * different healing set sizes
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 10},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 50},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 100},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 500},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 1000},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 5000},
-    
-    # hasnet ood with 1 healing epoch
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-1)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 1},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-1)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 1},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-1)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 1},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-1)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 1},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-1)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 1},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-1)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 1},
-    
-    # hasnet ood with 5 healing epoch
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-10)_(healing_epochs-5)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 10, 'healing_epochs': 5},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(healing_epochs-5)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'healing_epochs': 5},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)_(healing_epochs-5)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 100, 'healing_epochs': 5},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-500)_(healing_epochs-5)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 500, 'healing_epochs': 5},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-1000)_(healing_epochs-5)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 1000, 'healing_epochs': 5},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-5)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 5},
-    
-    # special servers for special purposes
-    'hasnet_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'hasnet_ood_random_labelling', 'clients_ratio': 0.1, 'healing_set_size': 50, 'num_clients': 100},
-    'hasnet_hidden_values_server': {'type': 'hasnet_hidden_values'},
-    'hasnet_hidden_values_server_simple_backdoor': {'type': 'hasnet_hidden_values', 'suffix_phrase': 'backdoor'},
-    'hasnet_hidden_values_server_visbile_backdoor_initially_good': {'type': 'hasnet_hidden_values', 'suffix_phrase': 'visible_backdoor_initially_good'},
-    'hgsd_id_for_changing_clients': {'type': 'hgsd_id_for_changing_clients', 'suffix_phrase': 'visible_backdoor_initially_good', 'bad_clients_remain_good_epoch': 30},
+    # SPECIAL SERVERS FOR SPECIAL PURPOSES
+    'agsd_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'agsd_ood_random_labelling', 'clients_ratio': 0.1, 'healing_set_size': 50, 'num_clients': 100},
+    'agsd_id_hidden_values_server': {'type': 'agsd_id_hidden_values'},
+    'agsd_id_hidden_values_server_simple_backdoor': {'type': 'agsd_id_hidden_values', 'suffix_phrase': 'backdoor'},
+    'agsd_id_hidden_values_server_visbile_backdoor_initially_good': {'type': 'agsd_id_hidden_values', 'suffix_phrase': 'visible_backdoor_initially_good'},
+    'agsd_id_for_changing_clients': {'type': 'agsd_id_for_changing_clients', 'suffix_phrase': 'visible_backdoor_initially_good', 'bad_clients_remain_good_epoch': 30},
     
     # more than two clusters
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 3},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 3},
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'hasnet_heldout', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'hasnet_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 3},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 3},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
     
     
     # initially undefended hgsd
-    'hgsd_id_initially_undefended_10': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 10},
-    'hgsd_id_initially_undefended_20': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 20},
-    'hgsd_id_initially_undefended_30': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 30},
-    'hgsd_id_initially_undefended_40': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 40},
-    'hgsd_id_initially_undefended_50': {'type': 'hgsd_id_initially_undefended', 'defense_start_round': 50},
+    'agsd_id_initially_undefended_10': {'type': 'agsd_id_initially_undefended', 'defense_start_round': 10},
+    'agsd_id_initially_undefended_20': {'type': 'agsd_id_initially_undefended', 'defense_start_round': 20},
+    'agsd_id_initially_undefended_30': {'type': 'agsd_id_initially_undefended', 'defense_start_round': 30},
+    'agsd_id_initially_undefended_40': {'type': 'agsd_id_initially_undefended', 'defense_start_round': 40},
+    'agsd_id_initially_undefended_50': {'type': 'agsd_id_initially_undefended', 'defense_start_round': 50},
     
 }

@@ -1,10 +1,10 @@
 # Dataset to perform the analysis on
 dataset_names = [
-    'gtsrb_non_sota_standard_non_iid1',
-    'gtsrb_non_sota_standard_non_iid3',
-    'gtsrb_non_sota_standard_non_iid5',
-    'gtsrb_non_sota_standard_non_iid7',
-    'gtsrb_non_sota_standard_non_iid9',
+    # 'gtsrb_non_sota_standard_non_iid1',
+    # 'gtsrb_non_sota_standard_non_iid3',
+    # 'gtsrb_non_sota_standard_non_iid5',
+    # 'gtsrb_non_sota_standard_non_iid7',
+    # 'gtsrb_non_sota_standard_non_iid9',
     'gtsrb_non_sota_mesas_non_iid',
 ]
 
@@ -30,8 +30,8 @@ server_types = [
     # 'mesas_(num_clients-100)_(clients_ratio-0.1)',
     
     # # HASNET SERVER ANALYSIS - THIS WILL BE A VERY DETAILED ANALYSIS
-    'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
        
 ]
 

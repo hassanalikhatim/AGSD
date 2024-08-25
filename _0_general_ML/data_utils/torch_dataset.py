@@ -51,7 +51,8 @@ class Torch_Dataset:
         
         data_indices = np.random.choice(data_type.__len__(), sample_size, replace=False)
         data_x, data_y = [], []
-        for ind in data_indices:
+        for i, ind in enumerate(data_indices):
+            print(f'\rSampling data: {i+1}/{len(data_indices)}', end='')
             x, y = data_type.__getitem__(ind)
             data_x.append(x)
             data_y.append(y)

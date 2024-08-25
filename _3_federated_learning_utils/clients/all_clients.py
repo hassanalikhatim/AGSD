@@ -9,5 +9,6 @@ from .backdoor_attacks.class_specific_backdoor_client import Class_Specific_Back
 from .backdoor_attacks.low_confidence_backdoor_client import Low_Confidence_Backdoor_Client
 from .backdoor_attacks.multiple_target_backdoor_client import Multiple_Target_Backdoor_Client
 from .backdoor_attacks.multitrigger_multitarget_backdoor_client import MultiTrigger_MultiTarget_Backdoor_Client
+from .backdoor_attacks.distributed_backdoor_client import Distributed_Backdoor_Client
 
 from .backdoor_defenses.flip_client import Flip_Client

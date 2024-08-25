@@ -34,7 +34,7 @@ class Helper_Hasnets:
         self.dictionary_to_load = {}
         
         self.last_client_results = {}
-        self.re_evaluated_on_non_patient_server = False
+        self.re_evaluated_on_non_patient_server = 0
         
         self.verbose = verbose
         self.versioning = versioning
@@ -63,15 +63,16 @@ class Helper_Hasnets:
     
     def prepare_model_name(self, model_name_prefix='federated'):
         
-        model_name_split_prefix = ''
+        model_name_split_alpha_prefix = ''
         if 'split_type' in self.my_model_configuration.keys() and self.my_model_configuration['split_type'] != 'iid':
-            model_name_split_prefix = f'_(split_type-{self.my_model_configuration['split_type']})'
+            model_name_split_alpha_prefix += f'_(split_type-{self.my_model_configuration['split_type']})'
         
-        model_name_alpha_prefix = ''
         if 'alpha' in self.my_model_configuration.keys() and self.my_model_configuration['alpha'] != 0:
-            model_name_alpha_prefix = f'_(alpha-{self.my_model_configuration['alpha']})/'
+            model_name_split_alpha_prefix += f'_(alpha-{self.my_model_configuration['alpha']})'
         
-        self.model_name = f'{model_name_split_prefix}{model_name_alpha_prefix}{model_name_prefix}'
+        if len(model_name_split_alpha_prefix) > 1: model_name_split_alpha_prefix += '/'
+        
+        self.model_name = f'{model_name_split_alpha_prefix}{model_name_prefix}'
         for key in self.my_model_configuration.keys():
             if key == 'gpu_number': self.model_name += '_(gpu_number-0)'
             elif (key == 'split_type') or (key == 'alpha'): pass
@@ -221,10 +222,10 @@ class Helper_Hasnets:
         for key in self.my_clients_distribution.keys():
             if len(clients[key]) > 0:
                 
-                if not self.re_evaluated_on_non_patient_server:
+                if self.re_evaluated_on_non_patient_server < 5:
                     slice_of_dict_results = clients[key][0].test_server_model(poisoned_data, server.model)
                     if not server.still_patient:
-                        self.re_evaluated_on_non_patient_server = True
+                        self.re_evaluated_on_non_patient_server += 1
                         self.last_client_results = copy.deepcopy(slice_of_dict_results)
                 else:
                     slice_of_dict_results = copy.deepcopy(self.last_client_results)
@@ -239,9 +240,9 @@ class Helper_Hasnets:
         return
     
     
-    def evaluate_server_statistics(self, epoch: int, server: Server):
+    def evaluate_server_statistics(self, epoch: int, server: Server, time: float=0):
         
-        server_stats = server.evaluate_server_statistics()
+        server_stats = {'time': time, **server.evaluate_server_statistics()}
         for key in server_stats.keys():
             active_key = self.col_name_identifier + '_' + key
             if active_key not in self.dictionary_to_save.keys():
@@ -255,13 +256,14 @@ class Helper_Hasnets:
     def get_display_string(self, server_stats: dict):
         
         color = 'white'
-        model_str, clean_str, attack_str, eval_str = '', '', '', ''
+        model_str, clean_str, attack_str, eval_str, time_str = '', '', '', '', ''
         for key in server_stats.keys():
             _str = '{:s}-{:s}'.format('{:.3f}'.format(server_stats[key]) if server_stats[key]!=0 else '()', key)[:10]
             _str += ' ' * (10-len(_str)) + ' | '
-            if 'train_' in key or 'test_' in key: model_str += _str
+            if ('train_' in key) or ('test_' in key): model_str += _str
             elif 'clean' in key: clean_str += _str; color = 'light_cyan' if server_stats[key]==0 and color!='light_red' else color
             elif 'ratio' in key: attack_str += _str; color = 'light_red' if server_stats[key]!=0 else color
+            elif 'time' in key: time_str += _str
             
         for key in self.dictionary_to_save.keys():
             _str = '{:.2f}-P_Acc'.format(self.dictionary_to_save[key][-1])[:10]
@@ -269,7 +271,7 @@ class Helper_Hasnets:
             if '_poisoned_acc' in key: eval_str = eval_str+colored(_str, 'yellow') if self.dictionary_to_save[key][-1]>0.1 else eval_str+_str
             # if '_poisoned_acc' in key and self.dictionary_to_save[key][-1] > 0.1: color = 'yellow' if color=='white' else color
             
-        return f'{model_str}{clean_str}{attack_str}{eval_str}', color
+        return f'{model_str}{clean_str}{attack_str}{eval_str}{time_str}', color
     
     
     def prepare_csv_things_with_versioning(self, csv_file_path: str, filename: str=''):

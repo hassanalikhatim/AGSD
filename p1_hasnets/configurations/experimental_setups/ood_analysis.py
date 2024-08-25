@@ -11,7 +11,7 @@ clients_distributions = [
 
 
 server_types = [
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-    'hasnet_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    'agsd_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     # 'hasnet_noise_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
 ]

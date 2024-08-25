@@ -12,5 +12,5 @@ clients_distributions = [
 
 
 server_types = [
-    'hgsd_id_for_changing_clients',
+    'agsd_id_for_changing_clients',
 ]

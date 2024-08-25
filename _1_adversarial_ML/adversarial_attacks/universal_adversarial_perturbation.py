@@ -13,9 +13,10 @@ from .adversarial_attack import Adversarial_Attack
 class Universal_Adversarial_Perturbation(Adversarial_Attack):
     
     def __init__(
-        self, model: Torch_Model, 
-        loss='crossentropy', 
-        input_mask=None, output_mask=None
+        self, 
+        model: Torch_Model, loss='crossentropy', 
+        input_mask=None, output_mask=None,
+        **kwargs
     ):
         
         super().__init__(model, loss=loss, input_mask=input_mask, output_mask=output_mask)
@@ -25,13 +26,14 @@ class Universal_Adversarial_Perturbation(Adversarial_Attack):
         return
     
     
-    def attack(self, x_input, y_input, iterations=1000, epsilon: float=0.3, verbose=True, **kwargs):
+    def attack(self, x_input, y_input, iterations=1000, epsilon: float=0.3, verbose=True, targeted: bool=False, **kwargs):
         
         self.last_run_loss_values = []
+        epsilon *= np.max(x_input) - np.min(x_input)
         
-        x_perturbation = np.random.standard_normal( size=[1]+list(x_input.shape[1:]) ).astype(np.float32)
+        x_perturbation = 0.1*np.random.standard_normal( size=[1]+list(x_input.shape[1:]) ).astype(np.float32)
         for iteration in range(iterations):
-            x_perturbation = self.step(x_input, y_input, x_perturbation, epsilon=5*epsilon/iterations)
+            x_perturbation = self.step(x_input, y_input, x_perturbation, epsilon=5*epsilon/iterations, targeted=targeted)
             x_perturbation = np.clip(x_perturbation, -epsilon, epsilon)
             x_perturbation = np.mean(np.clip(x_input + x_perturbation, np.min(x_input), np.max(x_input)) - x_input, axis=0, keepdims=True)
             
@@ -48,7 +50,9 @@ class Universal_Adversarial_Perturbation(Adversarial_Attack):
     
     def step(
         self, x_input, y_input, 
-        x_perturbation, epsilon=0.05
+        x_perturbation, epsilon=0.05,
+        targeted: bool=False,
+        **kwargs
     ):
         
         def sigmoid(x_in):
@@ -60,7 +64,12 @@ class Universal_Adversarial_Perturbation(Adversarial_Attack):
         x_delta = torch.autograd.Variable(torch.tensor(x_perturbation)).to(self.device)
         x_delta.requires_grad=True
         
-        loss = self.adv_loss_outputs(self.model(torch.clamp(x_v + x_delta, 0, 1)), y_in)
+        prediction = self.model(x_v+x_delta)
+        
+        if targeted:
+            loss = self.adv_loss_outputs(prediction, y_in)
+        else:
+            loss = -1 * self.adv_loss_outputs(prediction, y_in)
         torch.mean(loss).backward()
         
         x_perturbation -= epsilon * x_delta.grad.data.sign().detach().cpu().numpy()

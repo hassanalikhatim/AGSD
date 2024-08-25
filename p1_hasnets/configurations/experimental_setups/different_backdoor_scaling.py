@@ -6,7 +6,7 @@ dataset_names = [
 
 # Federated learning configurations
 clients_distributions = [
-    # HGSD at different scales
+    # AGSD at different scales
     # {'simple_(poison-0.25)': 0.45},
     # {'simple_(poison-0.25)_(scale-2)': 0.45},
     {'simple_(poison-0.25)_(scale-3)': 0.45},
@@ -15,6 +15,6 @@ clients_distributions = [
 
 
 server_types = [
-    # 'hasnet_heldout_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-    'hasnet_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
 ]

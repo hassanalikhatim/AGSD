@@ -1,6 +1,7 @@
 import torch
 from termcolor import colored
 import gc
+import time
 
 
 # from ..config import *
@@ -26,6 +27,7 @@ def federated_shot(
         my_model_configuration['alpha'] = 0.
     
     # *** preparing some results-related variables ***
+    used_time = 0
     results_path = configuration_variables['results_path']
     versioning = configuration_variables['versioning']
     different_clients_configured = configuration_variables['different_clients_configured']
@@ -64,10 +66,14 @@ def federated_shot(
         server = get_server(my_data, global_model, clients_with_keys, my_server_configuration, healing_data_save_path=healing_data_save_path)
         
         for epoch in range(my_model_configuration['epochs']):
+            
+            start_time = time.time()
             server.shot(round=epoch)
+            _used_time = time.time() - start_time - server.time_out
+            used_time = _used_time if _used_time>10 else used_time
             
             helper.evaluate_all_clients_on_test_set(epoch, clients_with_keys, server, poisoned_data)
-            server_stats = helper.evaluate_server_statistics(epoch, server)
+            server_stats = helper.evaluate_server_statistics(epoch, server, used_time)
             show_str, color = helper.get_display_string(server_stats)
             
             print_str = f'\r({my_data.data_name[:3]}-{(my_server_configuration['type']+' '*10)[:10]}-{f'{my_server_configuration['healing_set_size'] if 'healing_set_size' in my_server_configuration.keys() else ''}{' '*5}'[:5]}) | Round {epoch:3d}: {show_str}'

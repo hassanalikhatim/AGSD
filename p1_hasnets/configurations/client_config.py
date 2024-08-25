@@ -92,6 +92,7 @@ client_configurations = {
     'visible_backdoor_initially_good': simple_backdoor_client_configuration,
     'class_specific_backdoor': class_specific_backdoor_client_configuration,
     'low_confidence_backdoor': low_confidence_backdoor_client_configuration,
+    'distributed_backdoor': simple_backdoor_client_configuration,
     'adv_training_backdoor': adversarial_training_backdoor_client_configuration,
     'adv_optimization_backdoor': adversarial_optimization_backdoor_client_configuration
 }
@@ -178,6 +179,12 @@ different_clients_configured = {
     'low_confidence_(poison-0.45)_(scale-2)': {'type': 'low_confidence_backdoor', 'poison_ratio': 0.45, 'scale': 2},
     'low_confidence_(poison-0.55)_(scale-2)': {'type': 'low_confidence_backdoor', 'poison_ratio': 0.55, 'scale': 2},
     'low_confidence_(poison-0.65)_(scale-2)': {'type': 'low_confidence_backdoor', 'poison_ratio': 0.65, 'scale': 2},
+    
+    'distributed_(poison-0.25)_(scale-2)': {'type': 'distributed_backdoor', 'poison_ratio': 0.25, 'scale': 2},
+    'distributed_(poison-0.35)_(scale-2)': {'type': 'distributed_backdoor', 'poison_ratio': 0.35, 'scale': 2},
+    'distributed_(poison-0.45)_(scale-2)': {'type': 'distributed_backdoor', 'poison_ratio': 0.45, 'scale': 2},
+    'distributed_(poison-0.55)_(scale-2)': {'type': 'distributed_backdoor', 'poison_ratio': 0.55, 'scale': 2},
+    'distributed_(poison-0.65)_(scale-2)': {'type': 'distributed_backdoor', 'poison_ratio': 0.65, 'scale': 2},
     
     
     'adv_training_(poison-0.25)_(scale-1)': {'type': 'adv_training_backdoor', 'poison_ratio': 0.25, 'scale': 1},

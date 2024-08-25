@@ -45,6 +45,7 @@ class Server(Server_Client_Plugin):
         self.saved_flattened_model = None
         
         self.verbose = verbose; self.show_msg = ''; self.a_msg_that_i_need_to_print = ''
+        self.time_out = 0
         
         return
     
