@@ -64,7 +64,7 @@ class Irreversible_Backdoor(Simple_Backdoor):
         attack = Universal_Adversarial_Perturbation(local_model, local_model.model_configuration['loss_fn'])
         
         np_trigger = attack.attack(
-            x_input, np.array([self.target]*len(x_input)), 
+            x_input, np.array([self.targets[0]]*len(x_input)), 
             iterations=self.backdoor_configuration['trigger_inversion_iterations'],
             verbose=False
         )

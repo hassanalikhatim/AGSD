@@ -1,5 +1,6 @@
 __all_results__/
 __ignore__/
+__deprecated__/
 __pycache__/
 __notebooks__/
 __paper__/
