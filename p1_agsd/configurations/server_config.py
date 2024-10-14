@@ -6,6 +6,8 @@ simple_server_configuration = {
     'num_clients': num_clients,
     'clients_ratio': clients_ratio
 }
+
+# SOTA backdoor defenses (FL servers) configurations
 dp_server_configuration = {
     'num_clients': num_clients,
     'clients_ratio': clients_ratio,
@@ -27,6 +29,8 @@ mesas_server_configuration = {
     'num_clients': num_clients,
     'clients_ratio': clients_ratio
 }
+
+# Our propose AGSD configurations
 agsd_id_server_configuration = {
     'num_clients': num_clients,
     'clients_ratio': clients_ratio,
@@ -43,19 +47,23 @@ agsd_ood_server_configuration = {
     'hasnet_attack_iterations': 30  # this is not used in AGSD.
 }
 
+
+# compiling all server configurations
 server_configurations = {
     'simple': simple_server_configuration,
+    
+    # SOTA defenses
     'dp': dp_server_configuration,
     'deepsight': simple_server_configuration,
     'krum': simple_server_configuration,
     'foolsgold': foolsgold_server_configuration,
     'flame': flame_server_configuration,
     'mesas': mesas_server_configuration,
-    # agsd_id servers
+    
+    # AGSD servers
     'agsd_id': agsd_id_server_configuration,
     'hasnet_noise': agsd_ood_server_configuration,
     'agsd_ood': agsd_ood_server_configuration,
-    'agsd_ood_random_labelling': agsd_ood_server_configuration,
     'agsd_ood_old': agsd_ood_server_configuration,
     'agsd_id_hidden_values': agsd_id_server_configuration,
     'agsd_id_initially_undefended': agsd_id_server_configuration,
@@ -172,7 +180,6 @@ different_servers_configured = {
     'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-5000)_(healing_epochs-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 5000, 'healing_epochs': 5},
     
     # SPECIAL SERVERS FOR SPECIAL PURPOSES
-    'agsd_ood_random_labelling_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)': {'type': 'agsd_ood_random_labelling', 'clients_ratio': 0.1, 'healing_set_size': 50, 'num_clients': 100},
     'agsd_id_hidden_values_server': {'type': 'agsd_id_hidden_values'},
     'agsd_id_hidden_values_server_simple_backdoor': {'type': 'agsd_id_hidden_values', 'suffix_phrase': 'backdoor'},
     'agsd_id_hidden_values_server_visbile_backdoor_initially_good': {'type': 'agsd_id_hidden_values', 'suffix_phrase': 'visible_backdoor_initially_good'},
@@ -183,6 +190,10 @@ different_servers_configured = {
     'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-3)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 3},
     'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
     'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-4)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 4},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-5)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 5},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-5)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 5},
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-6)': {'type': 'agsd_id', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 6},
+    'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)_(n_clusters-6)': {'type': 'agsd_ood', 'clients_ratio': 0.1, 'healing_set_size': 50, 'n_clusters': 6},
     
     
     # initially undefended hgsd

@@ -16,6 +16,6 @@ clients_distributions = [
 
 server_types = [
     # analysis of different clients ratio
-    # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
+    'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
 ]

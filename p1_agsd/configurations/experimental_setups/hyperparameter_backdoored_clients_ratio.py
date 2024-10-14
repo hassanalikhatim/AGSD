@@ -7,7 +7,9 @@ dataset_names = [
 
 # Federated learning configurations
 clients_distributions = [
+    {'simple_(poison-0.25)_(scale-2)': 0.01},
     {'simple_(poison-0.25)_(scale-2)': 0.05},
+    {'simple_(poison-0.25)_(scale-2)': 0.10},
     {'simple_(poison-0.25)_(scale-2)': 0.15},
     {'simple_(poison-0.25)_(scale-2)': 0.25},
     {'simple_(poison-0.25)_(scale-2)': 0.35},

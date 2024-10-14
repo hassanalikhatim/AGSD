@@ -21,7 +21,7 @@ def update_model_names(
 ):
     
     experiment_folder_nonfinal = results_path.split('/')[-2]
-    experiment_folder_final = 'results_agsd_final'
+    experiment_folder_final = 'results_agsd_some'
     results_path_final = f'../../__all_results__/_p1_hasnets/{experiment_folder_final}/'
     new_names_to_old_names = {
         'agsd_id': 'hasnet_heldout',
@@ -47,49 +47,51 @@ def update_model_names(
     helper.check_conducted(data_name=my_data.data_name)
     named_updated = helper.experiment_conducted
     
-    global_model = Torch_Model(my_data, my_model_configuration, path=helper.save_path)
-    global_model.load_weights(global_model.save_directory + helper.model_name)
-    
-    if not helper.experiment_conducted:
-        revised_directory = global_model.save_directory
-        revised_model_name = helper.model_name
+    if True:
         
-        # print('\n\n\n' + '*'*40)
-        # print(global_model.save_directory)
-        # print(helper.model_name)
-        # print('*'*40)
-        for key in new_names_to_old_names.keys():
-            revised_directory = replace_all_occurences_in_string(revised_directory, key, new_names_to_old_names[key])
-            revised_model_name = replace_all_occurences_in_string(revised_model_name, key, new_names_to_old_names[key])
-        # print('\n\n\n' + '*'*40)
-        # print(revised_directory)
-        # print(revised_model_name)
-        # print('*'*40)
+        global_model = Torch_Model(my_data, my_model_configuration, path=helper.save_path)
+        global_model.load_weights(global_model.save_directory + helper.model_name)
+        
+        if not helper.experiment_conducted:
+            revised_directory = global_model.save_directory
+            revised_model_name = helper.model_name
             
-    else:
-        revised_directory = global_model.save_directory
-        revised_model_name = helper.model_name
-        
-    model_found_and_loaded = global_model.load_weights(revised_directory+revised_model_name)
-    print(f'Model found and loaded: {model_found_and_loaded}.')
-    if model_found_and_loaded and (experiment_folder_final!=experiment_folder_nonfinal):
-        named_updated = True
-        
-        all_folders = global_model.save_directory.split('/')
-        revised_folders = []
-        for folder in all_folders:
-            revised_folders.append(experiment_folder_final if folder==experiment_folder_nonfinal else folder)
-        revised_directory_final = '/'.join(revised_folders)
-        
-        confirm_directory( '/'.join(f'{revised_directory_final}{revised_model_name}'.split('/')[:-1]) )
-        if not os.path.isfile(revised_directory_final+revised_model_name+'.pth'):
-            global_model.save_weights(revised_directory_final+revised_model_name)
-            print(f'Model has been saved at: {revised_directory_final+revised_model_name}')
+            # print('\n\n\n' + '*'*40)
+            # print(global_model.save_directory)
+            # print(helper.model_name)
+            # print('*'*40)
+            for key in new_names_to_old_names.keys():
+                revised_directory = replace_all_occurences_in_string(revised_directory, key, new_names_to_old_names[key])
+                revised_model_name = replace_all_occurences_in_string(revised_model_name, key, new_names_to_old_names[key])
+            # print('\n\n\n' + '*'*40)
+            # print(revised_directory)
+            # print(revised_model_name)
+            # print('*'*40)
+                
         else:
-            print(f'WOW...! The model was already found at: {revised_directory_final+revised_model_name}')
-        
-    else:
-        print('$'*40, 'THIS MODEL HAS NOT BEEN FOUND.', '$'*40)
+            revised_directory = global_model.save_directory
+            revised_model_name = helper.model_name
+            
+        model_found_and_loaded = global_model.load_weights(revised_directory+revised_model_name)
+        print(f'Model found and loaded: {model_found_and_loaded}.')
+        if model_found_and_loaded and (experiment_folder_final!=experiment_folder_nonfinal):
+            named_updated = True
+            
+            all_folders = global_model.save_directory.split('/')
+            revised_folders = []
+            for folder in all_folders:
+                revised_folders.append(experiment_folder_final if folder==experiment_folder_nonfinal else folder)
+            revised_directory_final = '/'.join(revised_folders)
+            
+            confirm_directory( '/'.join(f'{revised_directory_final}{revised_model_name}'.split('/')[:-1]) )
+            if not os.path.isfile(revised_directory_final+revised_model_name+'.pth'):
+                global_model.save_weights(revised_directory_final+revised_model_name, save_optimizer=False)
+                print(f'Model has been saved at: {revised_directory_final+revised_model_name}')
+            else:
+                print(f'WOW...! The model was already found at: {revised_directory_final+revised_model_name}')
+            
+        else:
+            print('$'*40, 'THIS MODEL HAS NOT BEEN FOUND.', '$'*40)
         
     return named_updated
 

@@ -30,10 +30,9 @@ def get_server(
         'foolsgold': Server_FoolsGold,
         'flame': Server_Flame,
         'mesas': Server_Mesas,
-        # agsd servers
+        # AGSD servers
         'agsd_id': AGSD_ID,
         'agsd_ood': AGSD_OOD,
-        'agsd_ood_random_labelling': AGSD_OOD_Random_Labelling,
         'agsd_id_hidden_values': AGSD_ID_Hidden_Values,
         'hgsd_id_initially_undefended': AGSD_ID_Initially_Undefended,
         'hgsd_id_for_changing_clients': AGSD_ID_for_Changing_Clients_Analysis

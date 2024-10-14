@@ -8,6 +8,8 @@ rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 ~/miniconda3/bin/conda init zsh
 bash Miniconda3-latest-Linux-x86_64.sh -b -p "$HOME/miniconda"
+echo "You need to reboot the shell after installation in order to use conda."
+
 source "$HOME/miniconda/bin/activate"
 conda init
 conda list

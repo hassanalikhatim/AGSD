@@ -181,19 +181,26 @@ class Helper_Hasnets:
                 df[key] = self.dictionary_to_save[key]
                 
         # save the dataframe
+        confirm_directory('/'.join(self.csv_path_and_filename.split('/')[:-1]))
         df.to_csv(self.csv_path_and_filename, index=False)
         
         return
     
     
-    def load_columns_in_dictionary(self, load_columns):
+    def load_columns_in_dictionary(self, load_columns, local_verbose: bool=False):
         
         # load the df file
-        df = pd.read_csv(self.csv_path_and_filename)
+        try:
+            df = pd.read_csv(self.csv_path_and_filename)
+            
+            for column in load_columns:
+                if column in df.columns:
+                    self.dictionary_to_load[column] = df[column].tolist()
         
-        for column in load_columns:
-            if column in df.columns:
-                self.dictionary_to_load[column] = df[column].tolist()
+        except:
+            if local_verbose: 
+                print(f'No experiments for the data/model configuration: {self.my_model_configuration['dataset_name']} have been found.')
+            pass
         
         return
         
@@ -273,7 +280,7 @@ class Helper_Hasnets:
             if '_poisoned_acc' in key: eval_str = eval_str+colored(_str, 'yellow') if self.dictionary_to_save[key][-1]>0.1 else eval_str+_str
             # if '_poisoned_acc' in key and self.dictionary_to_save[key][-1] > 0.1: color = 'yellow' if color=='white' else color
             
-        return f'{model_str}{clean_str}{time_str}{attack_str}{eval_str}', color
+        return f'{model_str}{time_str}{clean_str}{attack_str}{eval_str}', color
     
     
     def prepare_csv_things_with_versioning(self, csv_file_path: str, filename: str=''):

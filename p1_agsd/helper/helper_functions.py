@@ -17,12 +17,21 @@ from _3_federated_learning_utils.splits import Splits
 
 
 my_datasets = {
+    # toy configurations
     'mnist_toy': MNIST,
+    'cifar10_toy': CIFAR10,
+    'gtsrb_toy': GTSRB,
+    
+    # real configurations
     'mnist': MNIST,
     'cifar10': CIFAR10,
     'gtsrb': GTSRB,
+    
+    # non sota analysis configurations
     'cifar10_non_sota': CIFAR10,
     'gtsrb_non_sota': GTSRB,
+    
+    # non-iid configurations
     'cifar10_non_sota_standard_non_iid': CIFAR10,
     'cifar10_non_sota_mesas_non_iid': CIFAR10,
     'gtsrb_non_sota_standard_non_iid1': GTSRB,

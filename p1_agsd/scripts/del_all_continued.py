@@ -51,7 +51,7 @@ def federated_shot(
     helper.check_conducted(data_name=my_data.data_name, count_continued_as_conducted=count_continued_as_conducted)
     
     global_model = Torch_Model(my_data, my_model_configuration, path=helper.save_path)
-    global_model.unsave(helper.model_name_cont)
+    global_model.unsave(helper.model_name)
     
     return
 

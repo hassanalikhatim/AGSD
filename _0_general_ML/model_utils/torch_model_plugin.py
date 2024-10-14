@@ -60,6 +60,8 @@ class Torch_Model_Plugin:
         path: str='',
     ):
         
+        self.model_architectures = model_architectures
+        
         self.data = data
         self.path = path
         
@@ -85,7 +87,7 @@ class Torch_Model_Plugin:
             for key in model_configuration.keys():
                 self.model_configuration[key] = model_configuration[key]
         
-        self.model = model_architectures[self.model_configuration['model_architecture']]()
+        self.model = self.model_architectures[self.model_configuration['model_architecture']]()
         
         self.device = torch.device('cuda:'+str(self.model_configuration['gpu_number']) if torch.cuda.is_available() else 'cpu')
         self.model.to(self.device)

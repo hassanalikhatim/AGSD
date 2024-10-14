@@ -101,7 +101,8 @@ def load_training_information_of_a_setting(
     clients_distribution, 
     server_type,
     continued = True,
-    results_path_local :str = ''
+    results_path_local :str = '',
+    verbose: bool=True
 ):
     
     _results_path = results_path_local
@@ -131,7 +132,12 @@ def load_training_information_of_a_setting(
         verbose=False, versioning=False
     )
     helper.prepare_paths_and_names(_results_path, csv_file_path, model_name_prefix='federated', filename='accuracies_and_losses_test.csv')
-    # helper.check_conducted(local_verbose=True)
+    
+    corrected_data_name = my_model_configuration['dataset_name']
+    for key in dataset_name_correction.keys():
+        if key in corrected_data_name:
+            corrected_data_name = key
+    helper.check_conducted(data_name=corrected_data_name, local_verbose=verbose)
     
     helper.load_all_columns_in_dictionary_with_this_string(helper.col_name_identifier)
     

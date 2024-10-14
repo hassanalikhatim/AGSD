@@ -1,23 +1,15 @@
 # Dataset to perform the analysis on
 dataset_names = [
-    'mnist',
-    'cifar10',
-    'gtsrb',
+    'mnist_toy',
+    'cifar10_toy',
+    'gtsrb_toy',
 ]
 
 
 # Federated learning configurations
 clients_distributions = [
-    
-    # different backdoor clients (one at a time) with 45% backdoor distribution
     {'simple_(poison-0.25)_(scale-2)': 0.45},
-    {'neurotoxin_(poison-0.25)_(scale-2)': 0.45},
-    {'invisible_(poison-0.25)_(scale-2)': 0.45},
-    {'iba_(poison-0.25)_(scale-2)': 0.45},
-    
-    # no attack
-    {},
-    
+    {}, # no attack
 ]
 
 
@@ -34,6 +26,4 @@ server_types = [
     # AGSD SERVER ANALYSIS - THIS WILL BE A VERY DETAILED ANALYSIS
     'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
     'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-50)',
-    # 'agsd_id_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
-    # 'agsd_ood_(num_clients-100)_(clients_ratio-0.1)_(healing_set_size-100)',
 ]

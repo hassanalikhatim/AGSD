@@ -83,22 +83,6 @@ class AGSD_ID(Server):
         return
     
     
-    def heal_model_from_state(self, model_state, epochs=1):
-        
-        local_model_configuration = {}
-        for key in self.model.model_configuration.keys():
-            local_model_configuration[key] = self.model.model_configuration[key]
-        local_model_configuration['learning_rate'] = 1e-4
-        
-        local_model = Torch_Model(self.real_healing_data, model_configuration=local_model_configuration)
-        local_model.model.load_state_dict(model_state)
-        
-        # local_model.data = self.my_perturber.attack(local_model, self.real_healing_data, epsilon=0.2)
-        local_model.train(epochs=self.configuration['healing_epochs'], batch_size=local_model_configuration['batch_size'], verbose=False)
-        
-        return local_model.model.state_dict()
-    
-    
     def pairwise_cosine_similarity_torch(self, flattened_clients_states):
         
         normalized_input_a = torch.nn.functional.normalize(flattened_clients_states)
@@ -139,18 +123,7 @@ class AGSD_ID(Server):
                 else:
                     delta_state_t[key] += delta / len(clients_states)
             
-            # deltas = torch.stack([(client_state[key]-self.model.model.state_dict()[key]).clone()*scalers[i] for i, client_state in enumerate(clients_states)], dim=0)
-            # delta_state_t[key] = torch.median(torch.stack([delta for delta in deltas], dim=0), dim=0)[0]
-            # delta_state_t[key] = torch.mean(torch.stack([delta for delta in deltas], dim=0), dim=0)
-            
             state_t[key] = state_t[key].float() + delta_state_t[key]
-            # if not ('bias' in key or 'bn' in key):
-            #     standard_deviation = torch.std(delta_state_t[key].clone().view(-1), unbiased=False)
-            #     standard_deviation_state = torch.std(state_t[key].clone().view(-1), unbiased=False)
-            #     try: state_t[key] += strength * torch.normal(0., standard_deviation, size=state_t[key].shape).to(state_t[key].device)
-            #     except: pass
-            #     # try: state_t[key] += 1e-6 * torch.normal(0., standard_deviation_state, size=state_t[key].shape).to(state_t[key].device)
-            #     # except: pass
                 
         return state_t
     
@@ -168,30 +141,12 @@ class AGSD_ID(Server):
             z_ = torch.nn.functional.one_hot(arr_, num_classes=len(self.data.get_class_names())).float()
             return torch.mean(torch.std(z_, dim=0, unbiased=False))
         
-        def multiplicative_stds(arr_in: torch.Tensor):
-            _arr = torch.argmax(arr_in, dim=1)
-            final_std = 1.
-            for k in torch.unique(_arr):
-                arr_ = _arr[_arr==k]
-                if len(arr_) > 0:
-                    z_ = torch.nn.functional.one_hot(arr_, num_classes=len(self.data.get_class_names())).float()
-                    final_std *= torch.mean(torch.std(z_, dim=0, unbiased=False))
-            return final_std
-        
-        def diff_norm(arr_1: torch.Tensor, arr_2: torch.Tensor):
-            _arr_1 = torch.exp(arr_1) / torch.sum(torch.exp(arr_1), dim=1, keepdim=True)
-            _arr_2 = torch.exp(arr_2) / torch.sum(torch.exp(arr_2), dim=1, keepdim=True)
-            return torch.norm(_arr_1-_arr_2, p=2)
-            # return torch.norm(arr_1-arr_2, p=1)
-        
         local_model = Torch_Model(self.real_healing_data, model_configuration=self.model.model_configuration)
         local_model.model.load_state_dict(self.super_aggregate(all_models))
         healing_data = self.my_perturber.attack(local_model, self.real_healing_data, epsilon=0.3, iterations=30)
-        a_stds_ = []; conf_ = []; loss_ = []
+        a_stds_ = []; conf_ = []
         for m, model_ in enumerate(all_models):
             local_model.model.load_state_dict(model_)
-            # healing_data = self.my_perturber.attack(local_model, self.real_healing_data, epsilon=0.3, iterations=30)
-            # act_y, _ = local_model.predict(torch.utils.data.DataLoader(self.real_healing_data.train, shuffle=False, batch_size=local_model.model_configuration['batch_size']), verbose=False)
             adv_y, _ = local_model.predict(torch.utils.data.DataLoader(healing_data.train, shuffle=False, batch_size=local_model.model_configuration['batch_size']), verbose=False)
             
             if torch.sum(torch.isnan(adv_y))>0: 
@@ -201,9 +156,8 @@ class AGSD_ID(Server):
         
         a_stds_ = torch.stack(a_stds_).to(self.model.device).view(-1)
         conf_ = -1 * torch.stack(conf_).to(self.model.device).view(-1)
-        # loss_ = -1 * torch.stack(loss_).to(self.model.device).view(-1)
         
-        return a_stds_, conf_, loss_
+        return a_stds_, conf_
     
     
     def rescale_a_state(self, state: dict):
@@ -271,7 +225,7 @@ class AGSD_ID(Server):
             return torch.exp( (torch.min(arr_in)-torch.max(arr_in))/(torch.mean(arr_in)-torch.min(arr_in)+1e-4) )
         
         # Computing the standard deviation, confidence and loss of each client
-        a_stds_, conf_, loss_ = self.get_std_and_confidence_torch(clients_state_dict)
+        a_stds_, conf_ = self.get_std_and_confidence_torch(clients_state_dict)
         
         # Computing the trust index --- gamma --- that we use to identify the right cluster
         gamma_1 = normalized_torch(a_stds_)
@@ -369,15 +323,6 @@ class AGSD_ID(Server):
     
     
     def aggregate(self, clients_state_dict, pre_str=''):
-        
-        return_model = self.aggregate_defended_torch(clients_state_dict, pre_str=pre_str)
-        
-        # try:
-        #     return_model = self.aggregate_defended_torch(clients_state_dict, pre_str=pre_str)
-        # except Exception as e:
-        #     print('The exception that I encountered is:', e)
-        #     return_model = self.model.model.state_dict()
-        
-        return return_model
+        return self.aggregate_defended_torch(clients_state_dict, pre_str=pre_str)
     
     

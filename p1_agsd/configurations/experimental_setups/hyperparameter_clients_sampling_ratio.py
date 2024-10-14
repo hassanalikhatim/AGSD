@@ -1,13 +1,13 @@
 # Dataset to perform the analysis on
 dataset_names = [
     'gtsrb_non_sota', 
-    'cifar10_non_sota'
+    # 'cifar10_non_sota'
 ]
 
 
 # Federated learning configurations
 clients_distributions = [
-    {'simple_(poison-0.25)': 0.45},
+    # {'simple_(poison-0.25)': 0.45},
     {'simple_(poison-0.25)_(scale-2)': 0.45},
 ]
 

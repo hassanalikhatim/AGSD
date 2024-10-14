@@ -72,8 +72,11 @@ class Torch_Model(Torch_Model_Plugin):
         
         if os.path.isfile(name+'.pth'):
             
-            self.model.load_state_dict(torch.load(name+'.pth'))
-            if load_optimizer:
+            if torch.cuda.is_available():
+                self.model.load_state_dict(torch.load(name+'.pth'))
+            else:
+                self.model.load_state_dict(torch.load(name+'.pth', map_location=torch.device(self.device)))
+            if load_optimizer and os.path.isfile(name+'_optimizer.pth'):
                 self.optimizer.load_state_dict(torch.load(name+'_optimizer.pth'))
             print('Loaded pretrained weights.')
             
