@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cd $HOME/
-git clone "https://github.com/anonymous-anonymous-dev/download_pretrained_models.git"
+git clone "https://github.com/hassanalikhatim/download_agsd_pretrained_models.git"
 cd download_pretrained_models
 git remote -v
 git pull origin main
