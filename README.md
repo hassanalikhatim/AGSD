@@ -47,11 +47,14 @@ python _p1_agsd_main.py --generate_results
 
 ## Cite as
 ```
-@inproceedings{anonymous2024adversarially,
-  title={Adversarially Guided Stateful Defense Against Backdoor Attacks in Deep Federated Learning},
-  author={Anonymous et al.},
-  booktitle={Proceedings of the 40th annual computer security applications conference},
-  year={2024}
+@misc{ali2024adversarially,
+      title={Adversarially Guided Stateful Defense Against Backdoor Attacks in Federated Deep Learning}, 
+      author={Hassan Ali and Surya Nepal and Salil S. Kanhere and Sanjay Jha},
+      year={2024},
+      eprint={2410.11205},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2410.11205}, 
 }
 ```
 
